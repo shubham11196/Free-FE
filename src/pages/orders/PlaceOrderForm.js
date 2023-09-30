@@ -89,11 +89,11 @@ export default function PlaceOrderForm() {
                     />
                   </FormGroup>
                   <FormGroup>
-                    <Label for="brokerage">Broker Name</Label>
+                    <Label for="brokerage">Broker Name / Party Name</Label>
                     <Input
                       type="text"
                       name="brokerage"
-                      placeholder="Enter Broker Name"
+                      placeholder="Enter Broker Name / Party Name"
                       value={logdata.brokerage}
                       onChange={handleChange}
 

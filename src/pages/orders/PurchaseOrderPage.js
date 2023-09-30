@@ -14,41 +14,170 @@ import Page from '../../components/Page';
 import { Label } from 'reactstrap';
 import PurchaseDetailsTable from '../../components/Orders/PurchaseDetailsTable';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function PurchaseOrderPage() {
     const [order, setOrder] = useState([]);
     const [purchase, setPurchase] = useState([]);
-    
+    const [deductions, setDeductions] = useState({
+        freight: 0,
+        dala: 0,
+        kanta: 0,
+        cd: 0,
+        tds: 0,
+        bardana: 0,
+        brokerage: 0,
+        commission: 0
+    });
+
     const [optionalFields, setOptionalFields] = useState({
         vehicleNo: "",
         driverName: "",
         loadingIncharge: "",
         kantaSilipWeight: "",
         dalalName: ""
-
     })
-    
+
     const [addFields, setAddFields] = useState({
-        qty: "",
+        qty: 0,
         bardanaClaim: "",
         qualityClaimPercent: "",
         qualityClaim: ""
     }) 
-    const handleChange = () => {
+
+    const [quantityData, setQuantityData] = useState({
+      billingWeight: 0,
+      kantaWeight: 0
+    });
+
+    const [ freightAdd, setFrieghtAdd] = useState(0);
+    const [ freightSub, setFrieghtSub] = useState(0);
+    const [ commAdd, setCommAdd] = useState(0);
+    const [ commSub, setCommSub] = useState(0);
+
+    const calculateFreight = (e) => {
+      const { name, value } = e.target;
+      // if(name === "freightAdd")
+         
+    }
+
+  
+
+    const calculateComm = ()  => {
 
     }
+
+    
+    
+    const handleQuantityChange = (e) => {
+      const { name, value } = e.target;
+      let minQty = addFields.qty
+      if(name === "billingWeight"){
+        let newValue = value ? value : 0;
+        minQty = Math.min(Number(newValue), Number(quantityData.kantaWeight))
+
+      }
+      if(name === "kantaWeight"){
+        let newValue = value ? value : 0;
+        minQty = Math.min(Number(quantityData.billingWeight), Number(newValue))
+
+      }
+      setAddFields(() => {
+          return {
+              ...addFields,
+              qty: minQty
+
+          }
+      })
+      console.log("Minimum", quantityData);
+      console.log("Minimum", Math.min(quantityData.billingWeight, quantityData.kantaWeight))
+      setQuantityData(() => {
+          return {
+              ...quantityData,
+              [name]: parseInt(value)
+
+          }
+      })
+    }
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+
+        setOptionalFields(() => {
+            return {
+                ...optionalFields,
+                [name]: value
+
+            }
+        })
+    }
+
+    const handleItemChange = (e) => {
+        const { name, value } = e.target;
+
+        setAddFields(() => {
+            return {
+                ...addFields,
+                [name]: value
+
+            }
+        })
+    }
+
+    const handleDeductionChange = (e) => {
+      const { name, value } = e.target;
+
+      setDeductions(() => {
+          return {
+              ...deductions,
+              [name]: value
+
+          }
+      })
+  }
+    
     const id = localStorage.getItem("purchaseId");
     useEffect(() => {
-        const res = fetch(`http://localhost:5000/api/orders/${id}`)
-            .then(res => res.json())
+        const res = axios.get(`http://localhost:5000/api/orders/${id}`)
+            // .then(res => res.json())
             .then(res => {
-                setPurchase(res.data[0].voucher);
-                setOrder(res.data)
-                console.log("responsee", res)
-            });
-    }, []);
-    const onSubmit = () => {
+                setPurchase(res.data.data[0].voucher);
 
+                setDeductions(res.data.data[0].deductions);
+                setOrder(res.data.data)
+                console.log("responseesssss", res.data.data)
+            });
+        viewItem();
+        viewAdditionalFields();
+        
+    }, []);
+    const addOptionalFields = async () => {
+        const res = await axios.post(`http://localhost:5000/api/orders/addFields/${id}`, 
+            optionalFields
+        );
+        toast("Optional Field added Successfully");
+
+    }
+    const addItem = async () => {
+        const res = await axios.post(`http://localhost:5000/api/orders/addItem/${id}`, 
+        addFields
+        );
+        toast("Item added Successfully");
+
+    }
+    const viewAdditionalFields = async () => {
+        const res = await axios.get(`http://localhost:5000/api/orders/viewOptionalFields/${id}`, 
+        addFields
+        );
+        setOptionalFields(res.data.data[0])
+        console.log("my response", res);
+    }
+    const viewItem = async () => {
+        const res = await axios.get(`http://localhost:5000/api/orders/viewItems/${id}`, 
+        addFields
+        );
+        setAddFields(res.data.data[0])
+        console.log("my response", res);
     }
     const handlePurchaseChange = (e, product, i) =>{
       e.preventDefault();
@@ -68,16 +197,33 @@ export default function PurchaseOrderPage() {
       setPurchase(oldState => [...oldState, newPurchase]);
     }
 
+
+
     const savePurchase = () =>{
       console.log(purchase,'purchase data');
       axios.post('http://localhost:5000/api/orders/createVoucher/41',purchase).then(res=>console.log(res));
+      toast("Voucher data added Successfully");
+
     }
 
+    const saveDeductions = async () =>{
+      console.log(deductions,'deduction data');
+      let body = {...deductions, 
+        freight: Number(deductions.freight) + Number(freightAdd) - Number(freightSub),
+        commission: Number(deductions.commission) + Number(commAdd) - Number(commSub)
+      }
+      console.log("my body", body)
+      const response = await axios.post('http://localhost:5000/api/orders/addDeductions/41',body).then(res=>console.log(res));
+      console.log(response, "my res");
+      toast("Deductions added Successfully");
+
+    }
+    console.log("My fields",optionalFields);
     return (
         <div>
             <Card>
 
-                <CardHeader>Purchase Details</CardHeader>
+                <CardHeader>Purchase Voucher</CardHeader>
 
                 <CardBody style={{marginLeft:"150px"}}>
                     {order.map((pur, index) => {
@@ -116,9 +262,9 @@ export default function PurchaseOrderPage() {
                                Ashok Bansal Ji Gajraula
                            </div>
                            <div class="col-sm-4">
-                           <Label style={{fontWeight: "600"}}>Mat Center : </Label>
-                           &nbsp; &nbsp; 
-                               Main Store
+                           <Label style={{fontWeight: "600"}}>Narration : </Label>
+                             <textarea rows={2} cols={35} placeholder='Enter comments here'>
+                             </textarea>
                            </div>
                            <div class="col-sm-4">
                           
@@ -137,8 +283,7 @@ export default function PurchaseOrderPage() {
             <br/>
             <Card>
                 <CardBody>
-                  <button onClick={()=>addNewPurchase()} className='btn btn-primary'>Add New</button>
-                  <button onClick={()=>savePurchase()} className='btn btn-primary'>Save</button>
+                  
                     <table style={{marginLeft:"135px"}}>
                         <thead>
                             <th>Item</th>
@@ -170,9 +315,181 @@ export default function PurchaseOrderPage() {
                             ))}
                         </tbody>
                     </table>
-                </CardBody>
+                    <Row style={{marginTop: "20px"}}>
+                        <Col md="8">                        
+                        </Col>
+                        <Col md="3">  
+                            <button style={{marginRight: "20px"}} onClick={()=>addNewPurchase()} className='btn btn-primary'>Add New</button>
+                            <button onClick={()=>savePurchase()} className='btn btn-primary'>Save</button>
+                        </Col>
+                        <Col md="1">  
+                        </Col>
+                    </Row>
+              </CardBody>
             </Card>
             <br/>
+            <Card>
+                <CardBody>
+                  
+                    <table style={{marginLeft:"135px", border: "1px solid black"}}>
+                        <thead>
+                          <tr>
+                          <th>S No.</th>
+                            <th>Bill Sundry</th>
+                            <th>@</th>
+                            <th>Amount(Rs.)</th>
+                          </tr>
+                           
+                        </thead>
+                        <tbody>
+                            <tr>
+                              <td>
+                              &nbsp;&nbsp;&nbsp;1.
+                              </td>
+                              <td>Freight (add)</td>
+                              <td>
+                              <input type="number" onChange={(e) => setFrieghtAdd(e.target.value)} value={freightAdd}/>
+
+                              </td>
+                              <td>
+                              <input type="number" value={Number(deductions.freight) + Number(freightAdd) - Number(freightSub)}/>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                              &nbsp;&nbsp;&nbsp;2.
+
+                              </td>
+                              <td>Freight (less)</td>
+                              <td>
+                              <input type="number" onChange={(e) => setFrieghtSub(e.target.value)} value={freightSub}/>
+
+                              </td>
+                              <td>
+                              <input type="number" value={Number(deductions.freight) + Number(freightAdd) - Number(freightSub)}/>
+
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                              &nbsp;&nbsp;&nbsp;3.
+                              </td>
+                              <td>Dala (Labour Charge)</td>
+                              <td></td>
+                              <td>
+                              <input name="dala" type="number" onChange={handleDeductionChange} value={deductions.dala}/>
+
+                              </td>
+                            </tr>
+
+                            <tr>
+                              <td>
+                              &nbsp;&nbsp;&nbsp;4.
+                              </td>
+                              <td>Kanta Charge</td>
+                              <td></td>
+                              <td>
+                              <input name="kanta" type="number" onChange={(e) => handleDeductionChange(e)} value={deductions.kanta}/>
+
+
+                              </td>
+                            </tr>
+
+                            <tr>
+                              <td>
+                              &nbsp;&nbsp;&nbsp;5.
+                              </td>
+                              <td>CD (Cash Discount)</td>
+                              <td></td>
+                              <td>
+                              <input name="cd" type="number" onChange={handleDeductionChange} value={deductions.cd}/>
+
+
+                              </td>
+                            </tr>
+
+                            <tr>
+                              <td>
+                              &nbsp;&nbsp;&nbsp;6.
+                              </td>
+                              <td>TDS / TCS</td>
+                              <td></td>
+                              <td>
+                              <input name="tds" type="number" onChange={handleDeductionChange} value={deductions.tds}/>
+
+                              </td>
+                            </tr>
+
+                            <tr>
+                              <td>
+                              &nbsp;&nbsp;&nbsp;7.
+
+                              </td>
+                              <td>Bardana Chowker Qty / Amount</td>
+                              <td></td>
+                              <td>
+                              <input name="bardana" type="number" onChange={handleDeductionChange} value={deductions.bardana}/>
+
+                              </td>
+                            </tr>
+
+                            <tr>
+                              <td>
+                              &nbsp;&nbsp;&nbsp;8.
+                              </td>
+                              <td>Brokerage</td>
+                              <td></td>
+                              <td>
+                              <input name="brokerage" type="number" onChange={handleDeductionChange} value={deductions.brokerage}/>
+
+                              </td>
+                            </tr>
+
+                         
+
+                            <tr>
+                              <td>
+                              &nbsp;&nbsp;&nbsp;9.
+
+                              </td>
+                              <td>Commission (add)</td>
+                              <td>
+                              <input type="number" onChange={(e) => setCommAdd(e.target.value)} value={commAdd}/>
+
+                              </td>
+                              <td>
+                              <input type="number" value={Number(deductions.commission) + Number(commAdd) - Number(commSub)}/>
+                              </td>
+                            </tr>
+
+                            <tr>
+                              <td>
+                              &nbsp;&nbsp;&nbsp;10.
+                              </td>
+                              <td>Commission (less)</td>
+                              <td>
+                              <input type="number" onChange={(e) => setCommSub(e.target.value)} value={commSub}/>
+
+                              </td>
+                              <td>
+                              <input type="number" value={Number(deductions.commission) + Number(commAdd) - Number(commSub)}/>
+                              </td>
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+                    <Row style={{marginTop: "20px"}}>
+                        <Col md="8">                        
+                        </Col>
+                        <Col md="3">  
+                            {/* <button style={{marginRight: "20px"}} onClick={()=>addNewPurchase()} className='btn btn-primary'>Add New</button> */}
+                            <button onClick={()=>saveDeductions()} className='btn btn-primary'>Save</button>
+                        </Col>
+                        <Col md="1">  
+                        </Col>
+                    </Row>
+              </CardBody>
+            </Card>
           <Row>
             <Col md={6}>
 
@@ -188,7 +505,7 @@ export default function PurchaseOrderPage() {
                       name="vehicleNo"
                       placeholder="Enter Vehicle No."
                       value={optionalFields.vehicleNo}
-                      onChange={handleChange}
+                      onChange={(e) => handleChange(e)}
 
                     />
                   </FormGroup>
@@ -229,14 +546,14 @@ export default function PurchaseOrderPage() {
                       type="text"
                       name="dalalName"
                       placeholder="Enter Dalal Name"
-                      value={optionalFields.loadingIncharge}
+                      value={optionalFields.dalalName}
                       onChange={handleChange}
                     />
                   </FormGroup>
 
                   <FormGroup check row>
                     <Col sm={{ size: 10, offset: 2 }}>
-                      <Button onClick={onSubmit}>Submit</Button>
+                      <Button onClick={addOptionalFields}>Submit</Button>
                     </Col>
                   </FormGroup>
                 </Form>
@@ -254,13 +571,35 @@ export default function PurchaseOrderPage() {
               <CardBody>
                 <Form>
                   <FormGroup>
-                    <Label for="qty">Qty</Label>
+                    <Label for="qty">Billing Weight (Quantity in QTL)</Label>
+                    <Input
+                      type="number"
+                      name="billingWeight"
+                      placeholder="Enter Billing Weight"
+                      value={quantityData.billingWeight}
+                      onChange={(e) => handleQuantityChange(e)}
+
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <Label for="qty">Kanta Weight</Label>
+                    <Input
+                      type="number"
+                      name="kantaWeight"
+                      placeholder="Enter Kanta Weight"
+                      value={quantityData.kantaWeight}
+                      onChange={(e) => handleQuantityChange(e)}
+
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <Label for="qty">Accepted Weight</Label>
                     <Input
                       type="text"
                       name="qty"
-                      placeholder="Enter Quantity"
+                      placeholder="Enter Billing Weight"
                       value={addFields.qty}
-                      onChange={handleChange}
+                      onChange={handleItemChange}
 
                     />
                   </FormGroup>
@@ -271,7 +610,7 @@ export default function PurchaseOrderPage() {
                       name="bardanaClaim"
                       placeholder="Enter Bardana Claim"
                       value={addFields.bardanaClaim}
-                      onChange={handleChange}
+                      onChange={handleItemChange}
 
                     />
                   </FormGroup>
@@ -282,7 +621,7 @@ export default function PurchaseOrderPage() {
                       name="qualityClaimPercent"
                       placeholder="Enter Quality Claim %"
                       value={addFields.qualityClaimPercent}
-                      onChange={handleChange}
+                      onChange={handleItemChange}
 
                     />
                   </FormGroup>
@@ -293,13 +632,13 @@ export default function PurchaseOrderPage() {
                       name="qualityClaim"
                       placeholder="Enter Quantity"
                       value={addFields.qualityClaim}
-                      onChange={handleChange}
+                      onChange={handleItemChange}
 
                     />
                   </FormGroup>
                   <FormGroup check row>
                     <Col sm={{ size: 10, offset: 2 }}>
-                      <Button onClick={onSubmit}>Submit</Button>
+                      <Button onClick={addItem}>Submit</Button>
                     </Col>
                   </FormGroup>
                 </Form>
@@ -310,9 +649,7 @@ export default function PurchaseOrderPage() {
 
           </Col>
         </Row>
-      
-
-
+        <ToastContainer />
         </div>
     )
 }

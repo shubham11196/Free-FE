@@ -36,7 +36,7 @@ const OrdersTable = ({ headers, usersData, ...restProps }) => {
         </tr>
       </thead>
       <tbody>
-        {usersData.map((usersData, index) => (
+        {usersData.length > 0 && usersData.map((usersData, index) => (
           <tr key={index}>
             <td>{index + 1}</td>
             <td className="align-middle text-center">{usersData.date}</td>

@@ -43,6 +43,7 @@ const getBasename = () => {
 
 const App = (props) => {
   const dispatch = useDispatch();
+  const role = localStorage.getItem("role");
   let userDetails = JSON.parse(localStorage.getItem('userDetails'));
   if(userDetails.token && userDetails.user){
     dispatch(saveUserDetails({token:userDetails.token, userlogin: userDetails.user}));
@@ -82,7 +83,7 @@ const App = (props) => {
                   />
                 ))}
 
-                {/* <Route exact path="/" component={DashboardPage} />
+                <Route exact path="/" component={DashboardPage} />
                 <Route exact path="/orders" component={OrdersPage} />
                 <Route exact path="/" component={DashboardPage} />
                 {role == "Broker" ? <Route exact path="/orders" component={OrdersBrokerPage} /> :
@@ -112,7 +113,7 @@ const App = (props) => {
                 <Route exact path="/modals" component={ModalPage} />
                 <Route exact path="/forms" component={FormPage} />
                 <Route exact path="/input-groups" component={InputGroupPage} />
-                <Route exact path="/charts" component={ChartPage} /> */}
+                <Route exact path="/charts" component={ChartPage} /> 
               </React.Suspense>
             </MainLayout>
             <Redirect to="/" />

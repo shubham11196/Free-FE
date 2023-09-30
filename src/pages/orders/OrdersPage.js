@@ -63,7 +63,7 @@ export default function OrdersPage() {
 
   return (
     <div>
-        <Card>
+        {/* <Card>
             
               <CardHeader>Orders</CardHeader>
               <CardBody>
@@ -76,7 +76,7 @@ export default function OrdersPage() {
                   usersData={orders}
                 />
               </CardBody>
-            </Card>
+            </Card> */}
           
     </div>
   )
