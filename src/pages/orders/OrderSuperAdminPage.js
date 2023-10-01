@@ -7,7 +7,7 @@ import {
   } from 'reactstrap';
 import OrdersTable from '../../components/Orders/BrokerOrdersTable';
 import { getOrders }  from '../../redux/actions/OrderActions';
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useHistory } from 'react-router-dom';
 
 export default function OrderSuperAdminPage() {
@@ -41,7 +41,7 @@ export default function OrderSuperAdminPage() {
             <Button onClick={handleClick}color="primary" style={{width:"150px", marginLeft: "40px", marginTop: "30px"}}>Place Order</Button>
 
             <CardBody>
-                {role == "Super Admin"?
+                {role === "Super Admin"?
                 <OrdersTable
                 headers={[
                   'S No.',

@@ -1,15 +1,15 @@
 import React from 'react';
 
-import { Table, Progress } from 'reactstrap';
+import { Table } from 'reactstrap';
 
-import Avatar from 'components/Avatar';
+// import Avatar from 'components/Avatar';
 
-import withBadge from 'hocs/withBadge';
+// import withBadge from 'hocs/withBadge';
 
-const AvatarWithBadge = withBadge({
-  position: 'bottom-right',
-  color: 'success',
-})(Avatar);
+// const AvatarWithBadge = withBadge({
+//   position: 'bottom-right',
+//   color: 'success',
+// })(Avatar);
 
 const OrdersTable = ({ headers, usersData, ...restProps }) => {
   return (

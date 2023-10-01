@@ -7,14 +7,13 @@ import {
   } from 'reactstrap';
 import OrdersTable from '../../components/Orders/BrokerOrdersTable';
 import { getOrders }  from '../../redux/actions/OrderActions';
-import { useSelector, useDispatch } from "react-redux";
+import {  useDispatch } from "react-redux";
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 
 export default function OrdersPage() {
   const [orders, setOrders] = useState([]);
   const history = useHistory();
-    let BASE_URL = `${process.env.API_BASE_URL}/api/orders`;
     useEffect(()=>{
       axios.get("http://localhost:5000/api/orders")
       // .then(res=>res.json())

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, {  useState } from 'react'
 import {
   Button,
   Card,
@@ -11,12 +11,12 @@ import {
   Label,
   Row
 } from 'reactstrap';
-import { getThemeColors } from 'utils/colors';
+// import { getThemeColors } from 'utils/colors';
 import Page from '../../components/Page';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Forms from 'react-bootstrap/Form';
+// import Forms from 'react-bootstrap/Form';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -42,7 +42,7 @@ export default function PlaceOrderForm() {
     })
   };
   const onSubmit = async () => {
-    const res = await axios.post(`${process.env.API_BASE_URL}/api/orders/placeOrder`, logdata);
+   await axios.post(`${process.env.API_BASE_URL}/api/orders/placeOrder`, logdata);
     toast("Order Placed Successfully");
     // history.push('/orders')
 

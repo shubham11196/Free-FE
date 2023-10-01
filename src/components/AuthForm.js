@@ -6,7 +6,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { login, logout, register } from '../store/authSlice';
+import { login, register } from '../store/authSlice';
 function AuthForm({ authState }) {
   const dispatch = useDispatch();
   const {isAuthenticated, user, token} = useSelector((state) => state.auth);

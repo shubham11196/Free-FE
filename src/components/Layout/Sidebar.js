@@ -7,24 +7,24 @@ import {
   MdAccountCircle,
   MdArrowDropDownCircle,
   MdBorderAll,
-  MdBrush,
-  MdChromeReaderMode,
+  // MdBrush,
+  // MdChromeReaderMode,
   MdDashboard,
   MdExtension,
-  MdGroupWork,
-  MdInsertChart,
+  // MdGroupWork,
+  // MdInsertChart,
   MdKeyboardArrowDown,
-  MdNotificationsActive,
-  MdPages,
+  // MdNotificationsActive,
+  // MdPages,
   MdRadioButtonChecked,
-  MdSend,
-  MdStar,
+  // MdSend,
+  // MdStar,
   MdTextFields,
   MdViewCarousel,
-  MdViewDay,
-  MdViewList,
-  MdWeb,
-  MdWidgets,
+  // MdViewDay,
+  // MdViewList,
+  // MdWeb,
+  // MdWidgets,
 } from 'react-icons/md';
 import { NavLink } from 'react-router-dom';
 import {
@@ -66,20 +66,20 @@ const navComponents = [
   // { to: '/modals', name: 'modals', exact: false, Icon: MdViewDay },
 ];
 
-const navContents = [
-  { to: '/typography', name: 'typography', exact: false, Icon: MdTextFields },
-  { to: '/tables', name: 'tables', exact: false, Icon: MdBorderAll },
-];
+// const navContents = [
+//   { to: '/typography', name: 'typography', exact: false, Icon: MdTextFields },
+//   { to: '/tables', name: 'tables', exact: false, Icon: MdBorderAll },
+// ];
 
-const pageContents = [
-  { to: '/login', name: 'login / signup', exact: false, Icon: MdAccountCircle },
-  {
-    to: '/login-modal',
-    name: 'login modal',
-    exact: false,
-    Icon: MdViewCarousel,
-  },
-];
+// const pageContents = [
+//   { to: '/login', name: 'login / signup', exact: false, Icon: MdAccountCircle },
+//   {
+//     to: '/login-modal',
+//     name: 'login modal',
+//     exact: false,
+//     Icon: MdViewCarousel,
+//   },
+// ];
 
 const navItems = [
   { to: '/', name: 'dashboard', exact: true, Icon: MdDashboard },

@@ -10,9 +10,9 @@ import {
     Row,
     Form
 } from 'reactstrap';
-import Page from '../../components/Page';
+// import Page from '../../components/Page';
 import { Label } from 'reactstrap';
-import PurchaseDetailsTable from '../../components/Orders/PurchaseDetailsTable';
+// import PurchaseDetailsTable from '../../components/Orders/PurchaseDetailsTable';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -56,17 +56,17 @@ export default function PurchaseOrderPage() {
     const [ commAdd, setCommAdd] = useState(0);
     const [ commSub, setCommSub] = useState(0);
 
-    const calculateFreight = (e) => {
-      const { name, value } = e.target;
-      // if(name === "freightAdd")
+    // const calculateFreight = (e) => {
+    //   const { name, value } = e.target;
+    //   // if(name === "freightAdd")
          
-    }
+    // }
 
   
 
-    const calculateComm = ()  => {
+    // const calculateComm = ()  => {
 
-    }
+    // }
 
     
     
@@ -138,7 +138,7 @@ export default function PurchaseOrderPage() {
     
     const id = localStorage.getItem("purchaseId");
     useEffect(() => {
-        const res = axios.get(`${process.env.API_BASE_URL}/api/orders/${id}`)
+        axios.get(`${process.env.API_BASE_URL}/api/orders/${id}`)
             // .then(res => res.json())
             .then(res => {
                 setPurchase(res.data.data[0].voucher);
@@ -152,14 +152,14 @@ export default function PurchaseOrderPage() {
         
     }, []);
     const addOptionalFields = async () => {
-        const res = await axios.post(`${process.env.API_BASE_URL}/api/orders/addFields/${id}`, 
+        await axios.post(`${process.env.API_BASE_URL}/api/orders/addFields/${id}`, 
             optionalFields
         );
         toast("Optional Field added Successfully");
 
     }
     const addItem = async () => {
-        const res = await axios.post(`${process.env.API_BASE_URL}/api/orders/addItem/${id}`, 
+        await axios.post(`${process.env.API_BASE_URL}/api/orders/addItem/${id}`, 
         addFields
         );
         toast("Item added Successfully");
@@ -230,7 +230,7 @@ export default function PurchaseOrderPage() {
                     const today = new Date(pur.date);
                     const month = today.getMonth()+1;
                     const year = today.getFullYear();
-                    const date = today. getDate();
+                    const date = today.getDate();
                     const currentDate = month + "/" + date + "/" + year;
                     return(
                        <div class="container">

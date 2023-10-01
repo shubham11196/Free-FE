@@ -5,7 +5,7 @@ import { Route, Redirect } from 'react-router-dom';
 
 const PrivateRoute = ({ component: Component, authorizedRoles, ...rest }) => {
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated); // Assuming you have a selector for authentication state
-    const userRole = useSelector(state => state.auth.user.role);
+    // const userRole = useSelector(state => state.auth.user.role);
     console.log(useSelector(state => state.auth), 'state');
     console.log(isAuthenticated, authorizedRoles, 'abcde');
   return (

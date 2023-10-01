@@ -1,7 +1,7 @@
 import React from 'react';
 import { Table, Button } from 'reactstrap';
-import Avatar from 'components/Avatar';
-import withBadge from 'hocs/withBadge';
+// import Avatar from 'components/Avatar';
+// import withBadge from 'hocs/withBadge';
 import EditIcon from '@mui/icons-material/Edit';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import axios from 'axios';
@@ -14,13 +14,13 @@ const OrdersTable = ({ headers, usersData, ...restProps }) => {
   const history = useHistory();
 
   const handleApprove = async (id) => {
-    const res = await axios.post(`${process.env.API_BASE_URL}/api/orders/approveOrder/${id}`);
+    await axios.post(`${process.env.API_BASE_URL}/api/orders/approveOrder/${id}`);
     toast("Order Approved Successfully");
   }
   const role = localStorage.getItem("role")
 
   const handleDisapprove = async (id) => {
-    const res = await axios.post(`${process.env.API_BASE_URL}/api/orders/disapproveOrder/${id}`);
+    await axios.post(`${process.env.API_BASE_URL}/api/orders/disapproveOrder/${id}`);
     toast("Order Rejected Successfully");
   }
 
@@ -49,7 +49,7 @@ const OrdersTable = ({ headers, usersData, ...restProps }) => {
             <td className="align-middle text-center">{usersData.firmName}</td>
             <td className="align-middle text-center">{usersData.approvalStatus ? <span style={{ color: "green", fontWeight: "600" }}>Approved</span> : <span style={{ color: "red", fontWeight: "600" }}>Rejected</span>}</td>
             <td className="align-middle text-center">
-              {role == "Super Admin" ?
+              {role === "Super Admin" ?
                 <div>{!usersData.approvalStatus ?
                   <Button color="primary" size="sm" onClick={() => handleApprove(usersData.id)}>
                     Approve
@@ -66,7 +66,7 @@ const OrdersTable = ({ headers, usersData, ...restProps }) => {
 
             </td>
             <td>
-              {role == "Super Admin" ?
+              {role === "Super Admin" ?
                 <>
                   <Button style={{ marginBottom: "10px" }} color="primary" size="sm" onClick={() => handleAccept(usersData.id)}>
                     Accept

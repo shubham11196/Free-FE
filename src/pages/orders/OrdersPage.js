@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import {
-    Card,
-    CardBody,
-    CardHeader,
-  } from 'reactstrap';
-import OrdersTable from '../../components/Orders/OrdersTable';
+// import {
+//     Card,
+//     CardBody,
+//     CardHeader,
+//   } from 'reactstrap';
+// import OrdersTable from '../../components/Orders/OrdersTable';
 import { getOrders }  from '../../redux/actions/OrderActions';
-import { useSelector, useDispatch } from "react-redux";
+import {  useDispatch } from "react-redux";
 
 
 export default function OrdersPage() {
