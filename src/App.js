@@ -45,9 +45,12 @@ const App = (props) => {
   const dispatch = useDispatch();
   const role = localStorage.getItem("role");
   let userDetails = JSON.parse(localStorage.getItem('userDetails'));
-  if(userDetails.token && userDetails.user){
-    dispatch(saveUserDetails({token:userDetails.token, userlogin: userDetails.user}));
+  if (userDetails && userDetails.token !== undefined && userDetails.user !== undefined) {
+    dispatch(saveUserDetails({ token: userDetails.token, userlogin: userDetails.user }));
+  } else {
+    // Handle the case where userDetails, token, or user is undefined or an empty object
   }
+  
   return (
     <BrowserRouter basename={getBasename()}>
         <GAListener>
