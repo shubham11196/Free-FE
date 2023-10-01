@@ -42,7 +42,7 @@ export default function PlaceOrderForm() {
     })
   };
   const onSubmit = async () => {
-    const res = await axios.post('http://localhost:5000/api/orders/placeOrder', logdata);
+    const res = await axios.post(`${process.env.API_BASE_URL}/api/orders/placeOrder`, logdata);
     toast("Order Placed Successfully");
     // history.push('/orders')
 

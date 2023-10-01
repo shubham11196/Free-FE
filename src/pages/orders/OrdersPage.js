@@ -11,7 +11,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 export default function OrdersPage() {
   const [orders, setOrders] = useState([]);
-    let BASE_URL = 'http://localhost:5000/api/orders';
+    let BASE_URL = `${process.env.API_BASE_URL}/api/orders`;
     useEffect(()=>{
       fetch(BASE_URL)
       .then(res=>res.json())

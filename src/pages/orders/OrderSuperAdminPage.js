@@ -14,9 +14,8 @@ export default function OrderSuperAdminPage() {
     const [orders, setOrders] = useState([]);
     const role = localStorage.getItem("role");
     const history = useHistory();
-    let BASE_URL = 'http://localhost:5000/api/orders';
     useEffect(()=>{
-      fetch("http://localhost:5000/api/orders")
+      fetch(`${process.env.API_BASE_URL}/api/orders`)
       .then(res=>res.json())
       .then(res=> setOrders(res.data));
     },[]);

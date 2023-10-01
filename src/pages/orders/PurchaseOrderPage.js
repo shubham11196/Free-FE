@@ -138,7 +138,7 @@ export default function PurchaseOrderPage() {
     
     const id = localStorage.getItem("purchaseId");
     useEffect(() => {
-        const res = axios.get(`http://localhost:5000/api/orders/${id}`)
+        const res = axios.get(`${process.env.API_BASE_URL}/api/orders/${id}`)
             // .then(res => res.json())
             .then(res => {
                 setPurchase(res.data.data[0].voucher);
@@ -152,28 +152,28 @@ export default function PurchaseOrderPage() {
         
     }, []);
     const addOptionalFields = async () => {
-        const res = await axios.post(`http://localhost:5000/api/orders/addFields/${id}`, 
+        const res = await axios.post(`${process.env.API_BASE_URL}/api/orders/addFields/${id}`, 
             optionalFields
         );
         toast("Optional Field added Successfully");
 
     }
     const addItem = async () => {
-        const res = await axios.post(`http://localhost:5000/api/orders/addItem/${id}`, 
+        const res = await axios.post(`${process.env.API_BASE_URL}/api/orders/addItem/${id}`, 
         addFields
         );
         toast("Item added Successfully");
 
     }
     const viewAdditionalFields = async () => {
-        const res = await axios.get(`http://localhost:5000/api/orders/viewOptionalFields/${id}`, 
+        const res = await axios.get(`${process.env.API_BASE_URL}/api/orders/viewOptionalFields/${id}`, 
         addFields
         );
         setOptionalFields(res.data.data[0])
         console.log("my response", res);
     }
     const viewItem = async () => {
-        const res = await axios.get(`http://localhost:5000/api/orders/viewItems/${id}`, 
+        const res = await axios.get(`${process.env.API_BASE_URL}/api/orders/viewItems/${id}`, 
         addFields
         );
         setAddFields(res.data.data[0])
@@ -201,7 +201,7 @@ export default function PurchaseOrderPage() {
 
     const savePurchase = () =>{
       console.log(purchase,'purchase data');
-      axios.post('http://localhost:5000/api/orders/createVoucher/41',purchase).then(res=>console.log(res));
+      axios.post(`${process.env.API_BASE_URL}/api/orders/createVoucher/41`,purchase).then(res=>console.log(res));
       toast("Voucher data added Successfully");
 
     }
@@ -213,7 +213,7 @@ export default function PurchaseOrderPage() {
         commission: Number(deductions.commission) + Number(commAdd) - Number(commSub)
       }
       console.log("my body", body)
-      const response = await axios.post('http://localhost:5000/api/orders/addDeductions/41',body).then(res=>console.log(res));
+      const response = await axios.post(`${process.env.API_BASE_URL}/api/orders/addDeductions/418`,body).then(res=>console.log(res));
       console.log(response, "my res");
       toast("Deductions added Successfully");
 

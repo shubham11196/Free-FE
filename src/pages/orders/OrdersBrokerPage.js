@@ -14,7 +14,7 @@ import axios from 'axios';
 export default function OrdersPage() {
   const [orders, setOrders] = useState([]);
   const history = useHistory();
-    let BASE_URL = 'http://localhost:5000/api/orders';
+    let BASE_URL = `${process.env.API_BASE_URL}/api/orders`;
     useEffect(()=>{
       axios.get("http://localhost:5000/api/orders")
       // .then(res=>res.json())
