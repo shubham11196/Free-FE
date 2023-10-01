@@ -4,9 +4,9 @@ import SourceLink from 'components/SourceLink';
 import React from 'react';
 import { FaGithub } from 'react-icons/fa';
 import {
-  MdAccountCircle,
+  // MdAccountCircle,
   MdArrowDropDownCircle,
-  MdBorderAll,
+  // MdBorderAll,
   // MdBrush,
   // MdChromeReaderMode,
   MdDashboard,
@@ -19,8 +19,8 @@ import {
   MdRadioButtonChecked,
   // MdSend,
   // MdStar,
-  MdTextFields,
-  MdViewCarousel,
+  // MdTextFields,
+  // MdViewCarousel,
   // MdViewDay,
   // MdViewList,
   // MdWeb,

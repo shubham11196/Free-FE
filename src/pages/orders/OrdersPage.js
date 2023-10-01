@@ -23,38 +23,6 @@ export default function OrdersPage() {
 
     // const orders = useSelector((state) => state.orders);
   
-    const userProgressTableData = [
-        {
-          name: 'Tom',
-          date: '3 month ago',
-          progress: 75,
-        },
-        {
-          name: 'Jenny',
-          date: '1 year ago',
-          progress: 60,
-        },
-        {
-          name: 'Sim',
-          date: '2 hour ago',
-          progress: 50,
-        },
-        {
-          name: 'Christine',
-          date: 'a month ago',
-          progress: 40,
-        },
-        {
-          name: 'Bread',
-          date: '6 months ago',
-          progress: 30,
-        },
-        {
-          name: 'Dan',
-          date: '2 years ago',
-          progress: 25,
-        },
-      ];
 
   useEffect(() => {
     dispatch(getOrders());
