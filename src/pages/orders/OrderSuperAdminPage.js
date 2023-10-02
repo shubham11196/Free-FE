@@ -15,7 +15,7 @@ export default function OrderSuperAdminPage() {
     const role = localStorage.getItem("role");
     const history = useHistory();
     useEffect(()=>{
-      fetch(`${process.env.API_BASE_URL}/api/orders`)
+      fetch(`${'https://admin-backend-fjzy.onrender.com'}/api/orders`)
       .then(res=>res.json())
       .then(res=> setOrders(res.data));
     },[]);

@@ -2,7 +2,7 @@
   "name": "react-reduction",
   "version": "1.1.0",
   "private": false,
-  "homepage": "https://admin-backend-fjzy.onrender.com",
+  "homepage": "",
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
@@ -53,7 +53,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "API_BASE_URL=https://admin-backend-fjzy.onrender.com react-scripts build",
     "serve": "serve -s build",
     "deploy": "gh-pages -d build",
     "test": "react-scripts test --env=jsdom",

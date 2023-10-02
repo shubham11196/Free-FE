@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios'; // Import axios
 
-const API_BASE_URL = `${process.env.API_BASE_URL}/api`;
+const API_BASE_URL = `${'https://admin-backend-fjzy.onrender.com'}/api`;
 
 const initialState = {
   user: {
@@ -16,6 +16,7 @@ const initialState = {
 // Async thunk for logging in
 export const login = createAsyncThunk('auth/login', async (data, thunkAPI) => {
   try {
+    console.log('https://admin-backend-fjzy.onrender.com','base url her');
       const response = await axios.post(`${API_BASE_URL}/users/login`, data);
     if (response.status === 201) {
         const payload = response.data;

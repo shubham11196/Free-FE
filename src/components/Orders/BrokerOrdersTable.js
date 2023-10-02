@@ -14,13 +14,13 @@ const OrdersTable = ({ headers, usersData, ...restProps }) => {
   const history = useHistory();
 
   const handleApprove = async (id) => {
-    await axios.post(`${process.env.API_BASE_URL}/api/orders/approveOrder/${id}`);
+    await axios.post(`${'https://admin-backend-fjzy.onrender.com'}/api/orders/approveOrder/${id}`);
     toast("Order Approved Successfully");
   }
   const role = localStorage.getItem("role")
 
   const handleDisapprove = async (id) => {
-    await axios.post(`${process.env.API_BASE_URL}/api/orders/disapproveOrder/${id}`);
+    await axios.post(`${'https://admin-backend-fjzy.onrender.com'}/api/orders/disapproveOrder/${id}`);
     toast("Order Rejected Successfully");
   }
 
