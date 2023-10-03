@@ -86,17 +86,17 @@ const App = (props) => {
                 ))}
 
                 <Route exact path="/" component={DashboardPage} />
-                <Route exact path="/orders" component={OrdersPage} />
+                {/* <Route exact path="/orders" component={OrderSuperAdminPage} /> */}
                 <Route exact path="/" component={DashboardPage} />
-                {role === "Broker" ? <Route exact path="/orders" component={OrdersBrokerPage} /> :
+                {/* {role === "Broker" ? <Route exact path="/orders" component={OrdersBrokerPage} /> :
                   null
                 }
                 {role === "Super Admin" ? <Route exact path="/orders" component={OrderSuperAdminPage} />:
                 null
-                }
+                } */}
             
                 <Route exact path="/placeOrder" component={PlaceOrderForm} />
-                <Route exact path="/purchase/:id" component={PurchaseOrderPage} />
+                {/* <Route exact path="/purchase/:id" component={PurchaseOrderPage} /> */}
                 <Route exact path="/login-modal" component={AuthModalPage} />
                 <Route exact path="/buttons" component={ButtonPage} />
                 <Route exact path="/cards" component={CardPage} />

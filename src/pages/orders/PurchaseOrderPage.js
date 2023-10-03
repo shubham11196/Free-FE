@@ -199,9 +199,9 @@ export default function PurchaseOrderPage() {
 
 
 
-    const savePurchase = () =>{
+    const savePurchase = (id) =>{
       console.log(purchase,'purchase data');
-      axios.post(`${'https://admin-backend-fjzy.onrender.com'}/api/orders/createVoucher/41`,purchase).then(res=>console.log(res));
+      axios.post(`${'https://admin-backend-fjzy.onrender.com'}/api/orders/createVoucher/${id}`,purchase).then(res=>console.log(res));
       toast("Voucher data added Successfully");
 
     }
@@ -213,7 +213,7 @@ export default function PurchaseOrderPage() {
         commission: Number(deductions.commission) + Number(commAdd) - Number(commSub)
       }
       console.log("my body", body)
-      const response = await axios.post(`${'https://admin-backend-fjzy.onrender.com'}/api/orders/addDeductions/418`,body).then(res=>console.log(res));
+      const response = await axios.post(`${'https://admin-backend-fjzy.onrender.com'}/api/orders/addDeductions/${id}`,body).then(res=>console.log(res));
       console.log(response, "my res");
       toast("Deductions added Successfully");
 
@@ -483,7 +483,7 @@ export default function PurchaseOrderPage() {
                         </Col>
                         <Col md="3">  
                             {/* <button style={{marginRight: "20px"}} onClick={()=>addNewPurchase()} className='btn btn-primary'>Add New</button> */}
-                            <button onClick={()=>saveDeductions()} className='btn btn-primary'>Save</button>
+                            <button onClick={()=>saveDeductions(deductions.id)} className='btn btn-primary'>Save</button>
                         </Col>
                         <Col md="1">  
                         </Col>
