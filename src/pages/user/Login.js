@@ -33,7 +33,7 @@ const SignIn = () => {
     const senddata = async(e) => {
         e.preventDefault();
         const {email, password } = logdata;
-        const res = await fetch("http://localhost:3000/api/users/login", {
+        const res = await fetch("https://admin-backend-fjzy.onrender.com/api/users/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

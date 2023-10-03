@@ -15,7 +15,7 @@ export default function OrdersPage() {
   const [orders, setOrders] = useState([]);
   const history = useHistory();
     useEffect(()=>{
-      axios.get("http://localhost:5000/api/orders")
+      axios.get("https://admin-backend-fjzy.onrender.com/api/orders")
       // .then(res=>res.json())
       .then(res=> setOrders(res.data.data));
     },[]);

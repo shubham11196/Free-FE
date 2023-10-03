@@ -4,7 +4,7 @@ export const getOrders = () => async dispatch => {
   try {
     dispatch({type: actionTypes.GET_ORDERS_PENDING})
 
-    const {data} = await fetch('http://localhost:3000/api/orders')
+    const {data} = await fetch('https://admin-backend-fjzy.onrender.com/api/orders')
 
     dispatch({
       type: actionTypes.GET_ORDERS_SUCCESS,

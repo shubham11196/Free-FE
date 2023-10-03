@@ -34,7 +34,7 @@ const Register = () => {
         e.preventDefault();
 
         const { fname, email, mobile, password, cpassword } = udata;
-        const res = await fetch("http://localhost:3000/api/users/register", {
+        const res = await fetch("https://admin-backend-fjzy.onrender.com/api/users/register", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

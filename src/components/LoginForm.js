@@ -24,7 +24,7 @@ function LoginForm() {
   }
 
   const onSubmit = async () => {
-      const res = await axios.post(`http://localhost:5000/api/users/register`, logdata);
+      const res = await axios.post(`https://admin-backend-fjzy.onrender.com/api/users/register`, logdata);
       console.log(res);
       toast("User Registered Successfully");
       // history.push('/orders')
