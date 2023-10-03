@@ -12,7 +12,7 @@ import { useHistory } from 'react-router-dom';
 
 export default function OrderSuperAdminPage() {
     const [orders, setOrders] = useState([]);
-    const role = localStorage.getItem("role");
+    // const role = localStorage.getItem("role");
     const history = useHistory();
     useEffect(()=>{
       fetch(`${'https://admin-backend-fjzy.onrender.com'}/api/orders`)
