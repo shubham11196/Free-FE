@@ -6,16 +6,16 @@ const routes = [
         component: React.lazy(() => import('pages/DashboardPage')),
         roles: ['admin', 'user']
     },
-    // {
-    //     path: '/orders',
-    //     component: React.lazy(() => import('pages/orders/OrdersBrokerPage')),
-    //     roles: ['admin', 'Broker']
-    // },
-    // {
-    //     path: "/purchase/:id",
-    //     component: React.lazy(() => import('pages/orders/PurchaseOrderPage')),
-    //     roles: ['Super Admin', 'Broker']
-    // }
+    {
+        path: "/purchase/:id",
+        component: React.lazy(() => import('pages/orders/PurchaseOrderPage')),
+        roles: ['Super Admin', 'Broker']
+    },
+    {
+        path: '/orders',
+        component: React.lazy(() => import('pages/orders/OrderSuperAdminPage')),
+        roles: ['admin', 'user']
+    },
 
 ];
 
