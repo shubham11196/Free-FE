@@ -41,7 +41,6 @@ export default function OrderSuperAdminPage() {
             <Button onClick={handleClick}color="primary" style={{width:"150px", marginLeft: "40px", marginTop: "30px"}}>Place Order</Button>
 
             <CardBody>
-                { true ?
                 <OrdersTable
                 headers={[
                   'S No.',
@@ -59,24 +58,6 @@ export default function OrderSuperAdminPage() {
                 ]}
                 usersData={orders}
               />
-              :
-              <OrdersTable
-                headers={[
-                  'S No.',
-                  'Date',
-                  'Product Name',
-                  'Quantity',
-                  'Rate',
-                  'Packing Bardana',
-                  'Brokerage',
-                  'Delivery Time',
-                  'Firm Name',                    
-                  'Status',
-                  'Actions',
-                ]}
-                usersData={orders}
-              />
-                }
               
             </CardBody>
           </Card>
