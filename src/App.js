@@ -12,13 +12,7 @@ import PrivateRoute from './components/PrivateRoute';
 import routes from './utils/routes';
 import { saveUserDetails } from './store/authSlice';
 
-const OrdersPage = React.lazy(() => import('pages/orders/OrdersPage'));
-const OrderSuperAdminPage = React.lazy(() => import('pages/orders/OrderSuperAdminPage'));
-const PurchaseOrderPage = React.lazy(() => import('pages/orders/PurchaseOrderPage'));
-const OrdersBrokerPage = React.lazy(() => import('pages/orders/OrdersBrokerPage'));
 const PlaceOrderForm = React.lazy(() => import('pages/orders/PlaceOrderForm'));
-
-
 const AlertPage = React.lazy(() => import('pages/AlertPage'));
 const AuthModalPage = React.lazy(() => import('pages/AuthModalPage'));
 const BadgePage = React.lazy(() => import('pages/BadgePage'));
