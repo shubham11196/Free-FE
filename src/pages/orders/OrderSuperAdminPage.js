@@ -41,7 +41,7 @@ export default function OrderSuperAdminPage() {
             <Button onClick={handleClick}color="primary" style={{width:"150px", marginLeft: "40px", marginTop: "30px"}}>Place Order</Button>
 
             <CardBody>
-                {role === "Super Admin"?
+                { true ?
                 <OrdersTable
                 headers={[
                   'S No.',
@@ -58,7 +58,8 @@ export default function OrderSuperAdminPage() {
                   'Purchase Actions'
                 ]}
                 usersData={orders}
-              />:
+              />
+              :
               <OrdersTable
                 headers={[
                   'S No.',
