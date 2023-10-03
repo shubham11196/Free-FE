@@ -36,7 +36,6 @@ const getBasename = () => {
 
 const App = (props) => {
   const dispatch = useDispatch();
-  const role = localStorage.getItem("role");
   let userDetails = JSON.parse(localStorage.getItem('userDetails'));
   if (userDetails && userDetails.token !== undefined && userDetails.user !== undefined) {
     dispatch(saveUserDetails({ token: userDetails.token, userlogin: userDetails.user }));
