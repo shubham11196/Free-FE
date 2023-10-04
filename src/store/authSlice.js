@@ -47,10 +47,12 @@ export const register = createAsyncThunk('auth/register', async (data, thunkAPI)
 // Async thunk for logging out
 export const logout = createAsyncThunk('authentication/logout', async (_, thunkAPI) => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/users/logout`);
+    // const response = await axios.post(`${API_BASE_URL}/users/logout`);
     
+        const response = await axios.post(`http://localhost:5000/api/users/logout`);
+
     if (response.status === 200) {
-      return null;
+        localStorage.clear();
     } else {
       throw new Error('Logout failed');
     }

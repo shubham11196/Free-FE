@@ -12,7 +12,7 @@ function AuthForm({ authState }) {
   const {isAuthenticated, user, token} = useSelector((state) => state.auth);
   useEffect(() => {
     if(isAuthenticated){
-      setData({ ...logdata, email: "", password: "" })
+      setData({ ...logdata, email: "", password: "", role: "" })
       
       authState === 'SIGNUP' ? toast("User Registered Successfully") :toast("User Logged In Successfully");
       setTimeout(() => {
@@ -22,7 +22,9 @@ function AuthForm({ authState }) {
         token: token,
         user: user 
       };
-      localStorage.setItem('userDetails', JSON.stringify(storageData));
+      localStorage.setItem('email', logdata.email);
+      localStorage.setItem('role', logdata.role);
+
     }
   },[isAuthenticated,user]);
   const history = useHistory();
@@ -44,8 +46,8 @@ function AuthForm({ authState }) {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    const { email, password } = logdata;
-    const data = { email, password };
+    const { email, password, role } = logdata;
+    const data = { email, password, role };
 
     if (authState === "SIGNUP") {
       dispatch(register(data));

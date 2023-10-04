@@ -4,7 +4,7 @@ import Notifications from 'components/Notifications';
 import SearchInput from 'components/SearchInput';
 import { notificationsData } from 'demos/header';
 import withBadge from 'hocs/withBadge';
-import React from 'react';
+import React, {useState} from 'react';
 import {
   MdClearAll,
   MdExitToApp,
@@ -29,7 +29,9 @@ import {
   PopoverBody,
 } from 'reactstrap';
 import bn from 'utils/bemnames';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '../../store/authSlice';
+import { useHistory  } from 'react-router-dom';
 const bem = bn.create('header');
 
 const MdNotificationsActiveWithBadge = withBadge({
@@ -45,43 +47,40 @@ const MdNotificationsActiveWithBadge = withBadge({
   children: <small>5</small>,
 })(MdNotificationsActive);
 
-class Header extends React.Component {
-  state = {
-    isOpenNotificationPopover: false,
-    isNotificationConfirmed: false,
-    isOpenUserCardPopover: false,
-  };
+const Header = () => {
+  const [isOpenNotificationPopover, setIsOpenNotificationPopover] = useState(false);
+  const [isNotificationConfirmed, setIsNotificationConfirmed] = useState(false);
+  const [isOpenUserCardPopover, setIsOpenUserCardPopover] = useState(false);
 
-  toggleNotificationPopover = () => {
-    this.setState({
-      isOpenNotificationPopover: !this.state.isOpenNotificationPopover,
-    });
 
-    if (!this.state.isNotificationConfirmed) {
-      this.setState({ isNotificationConfirmed: true });
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const toggleNotificationPopover = () => {
+    setIsOpenNotificationPopover(!isOpenNotificationPopover)
+    if (!isNotificationConfirmed) {
+      setIsNotificationConfirmed(true)
     }
   };
 
-  toggleUserCardPopover = () => {
-    this.setState({
-      isOpenUserCardPopover: !this.state.isOpenUserCardPopover,
-    });
+  const toggleUserCardPopover = () => {
+    setIsOpenUserCardPopover(!isOpenUserCardPopover)
   };
 
-  handleSidebarControlButton = event => {
+  const handleSidebarControlButton = event => {
     event.preventDefault();
     event.stopPropagation();
-
     document.querySelector('.cr-sidebar').classList.toggle('cr-sidebar--open');
   };
 
-  render() {
-    const { isNotificationConfirmed } = this.state;
-
+  const signout = () => {
+    dispatch(logout);
+    localStorage.clear();
+    history.push('/login')
+  }
     return (
       <Navbar light expand className={bem.b('bg-white')}>
         <Nav navbar className="mr-2">
-          <Button outline onClick={this.handleSidebarControlButton}>
+          <Button outline onClick={handleSidebarControlButton}>
             <MdClearAll size={25} />
           </Button>
         </Nav>
@@ -96,20 +95,20 @@ class Header extends React.Component {
                 <MdNotificationsNone
                   size={25}
                   className="text-secondary can-click"
-                  onClick={this.toggleNotificationPopover}
+                  onClick={toggleNotificationPopover}
                 />
               ) : (
                 <MdNotificationsActiveWithBadge
                   size={25}
                   className="text-secondary can-click animated swing infinite"
-                  onClick={this.toggleNotificationPopover}
+                  onClick={toggleNotificationPopover}
                 />
               )}
             </NavLink>
             <Popover
               placement="bottom"
-              isOpen={this.state.isOpenNotificationPopover}
-              toggle={this.toggleNotificationPopover}
+              isOpen={isOpenNotificationPopover}
+              toggle={toggleNotificationPopover}
               target="Popover1"
             >
               <PopoverBody>
@@ -121,14 +120,14 @@ class Header extends React.Component {
           <NavItem>
             <NavLink id="Popover2">
               <Avatar
-                onClick={this.toggleUserCardPopover}
+                onClick={toggleUserCardPopover}
                 className="can-click"
               />
             </NavLink>
             <Popover
               placement="bottom-end"
-              isOpen={this.state.isOpenUserCardPopover}
-              toggle={this.toggleUserCardPopover}
+              isOpen={isOpenUserCardPopover}
+              toggle={toggleUserCardPopover}
               target="Popover2"
               className="p-0 border-0"
               style={{ minWidth: 250 }}
@@ -157,7 +156,7 @@ class Header extends React.Component {
                       <MdHelp /> Help
                     </ListGroupItem>
                     <ListGroupItem tag="button" action className="border-light">
-                      <MdExitToApp /> Signout
+                      <MdExitToApp /><button onClick={signout} style={{backgroundColor: "white", border: "none"}}>Signout</button>
                     </ListGroupItem>
                   </ListGroup>
                 </UserCard>
@@ -167,7 +166,6 @@ class Header extends React.Component {
         </Nav>
       </Navbar>
     );
-  }
 }
 
 export default Header;

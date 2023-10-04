@@ -11,11 +11,11 @@ const routes = [
         component: React.lazy(() => import('pages/orders/PurchaseOrderPage')),
         roles: ['Super Admin', 'Broker']
     },
-    {
-        path: '/orders',
-        component: React.lazy(() => import('pages/orders/OrderSuperAdminPage')),
-        roles: ['admin', 'user']
-    },
+    // {
+    //     path: '/orders',
+    //     component: React.lazy(() => import('pages/orders/OrderSuperAdminPage')),
+    //     roles: ['admin', 'user']
+    // },
 
 ];
 

@@ -13,6 +13,8 @@ import routes from './utils/routes';
 import { saveUserDetails } from './store/authSlice';
 
 const PlaceOrderForm = React.lazy(() => import('pages/orders/PlaceOrderForm'));
+const OrdersBrokerPage = React.lazy(() => import('pages/orders/OrdersBrokerPage'));
+const OrderSuperAdminPage = React.lazy(() => import('pages/orders/OrderSuperAdminPage'));
 const AlertPage = React.lazy(() => import('pages/AlertPage'));
 const AuthModalPage = React.lazy(() => import('pages/AuthModalPage'));
 const BadgePage = React.lazy(() => import('pages/BadgePage'));
@@ -42,7 +44,7 @@ const App = (props) => {
   } else {
     // Handle the case where userDetails, token, or user is undefined or an empty object
   }
-  
+  const role = localStorage.getItem("role");
   return (
     <BrowserRouter basename={getBasename()}>
         <GAListener>
@@ -79,14 +81,13 @@ const App = (props) => {
                 ))}
 
                 <Route exact path="/" component={DashboardPage} />
-                {/* <Route exact path="/orders" component={OrderSuperAdminPage} /> */}
                 <Route exact path="/" component={DashboardPage} />
-                {/* {role === "Broker" ? <Route exact path="/orders" component={OrdersBrokerPage} /> :
+                {role == "Broker" ? <Route exact path="/orders" component={OrdersBrokerPage} /> :
                   null
                 }
-                {role === "Super Admin" ? <Route exact path="/orders" component={OrderSuperAdminPage} />:
+                {role == "Super Admin" ? <Route exact path="/orders" component={OrderSuperAdminPage} />:
                 null
-                } */}
+                }
             
                 <Route exact path="/placeOrder" component={PlaceOrderForm} />
                 {/* <Route exact path="/purchase/:id" component={PurchaseOrderPage} /> */}
