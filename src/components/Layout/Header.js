@@ -29,7 +29,7 @@ import {
   PopoverBody,
 } from 'reactstrap';
 import bn from 'utils/bemnames';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { logout } from '../../store/authSlice';
 import { useHistory  } from 'react-router-dom';
 const bem = bn.create('header');

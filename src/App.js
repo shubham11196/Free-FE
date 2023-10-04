@@ -82,10 +82,10 @@ const App = (props) => {
 
                 <Route exact path="/" component={DashboardPage} />
                 <Route exact path="/" component={DashboardPage} />
-                {role == "Broker" ? <Route exact path="/orders" component={OrdersBrokerPage} /> :
+                {role === "Broker" ? <Route exact path="/orders" component={OrdersBrokerPage} /> :
                   null
                 }
-                {role == "Super Admin" ? <Route exact path="/orders" component={OrderSuperAdminPage} />:
+                {String(role) === "Super Admin" ? <Route exact path="/orders" component={OrderSuperAdminPage} />:
                 null
                 }
             

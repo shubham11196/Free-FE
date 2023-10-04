@@ -9,7 +9,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { login, register } from '../store/authSlice';
 function AuthForm({ authState }) {
   const dispatch = useDispatch();
-  const {isAuthenticated, user, token} = useSelector((state) => state.auth);
+  // const {isAuthenticated, user, token} = useSelector((state) => state.auth);
+    const {isAuthenticated, user} = useSelector((state) => state.auth);
+
   useEffect(() => {
     if(isAuthenticated){
       setData({ ...logdata, email: "", password: "", role: "" })
@@ -18,10 +20,10 @@ function AuthForm({ authState }) {
       setTimeout(() => {
         history.push('/orders')
       }, 1400)
-      let storageData = {
-        token: token,
-        user: user 
-      };
+      // let storageData = {
+      //   token: token,
+      //   user: user 
+      // };
       localStorage.setItem('email', logdata.email);
       localStorage.setItem('role', logdata.role);
 
@@ -91,11 +93,11 @@ function AuthForm({ authState }) {
           onChange={handleChange}
         >
           <option>Select User Role</option>
-          <option>Super Admin</option>
-          <option>Admin</option>
-          <option>Broker</option>
-          <option>Supplier</option>
-          <option>Seller</option>
+          <option value="Super Admin">Super Admin</option>
+          <option value="Admin">Admin</option>
+          <option value="Broker">Broker</option>
+          <option value="Supplier">Supplier</option>
+          <option value="Seller">Seller</option>
 
 
         </select>
