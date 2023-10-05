@@ -26,13 +26,14 @@ export default function OrderSuperAdminPage() {
                   'Brokerage',
                   'Delivery Time',
                   'Firm Name',                    
-                  'Status',          
+                  'Status',   
+                  'Actions'       
     ];
 
     if(role==="Super Admin"){
-      columns.push("Actions","Purchase Actions")
+      columns.push("Purchase Actions")
     }
-
+    console.log(role, "role");
     useEffect(()=>{
       fetch(`${'https://admin-backend-fjzy.onrender.com'}/api/orders`)
       .then(res=>res.json())
@@ -61,20 +62,7 @@ export default function OrderSuperAdminPage() {
 
             <CardBody>
                 <OrdersTable
-                headers={[
-                  'S No.',
-                  'Date',
-                  'Product Name',
-                  'Quantity',
-                  'Rate',
-                  'Packing Bardana',
-                  'Brokerage',
-                  'Delivery Time',
-                  'Firm Name',                    
-                  'Status',
-                  'Actions',
-                  'Purchase Actions'
-                ]}
+                headers={columns}
                 usersData={orders}
               />
               
