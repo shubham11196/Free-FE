@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios'; // Import axios
 
-// const API_BASE_URL = `${'https://admin-backend-fjzy.onrender.com'}/api`;
-const API_BASE_URL = `${'http://localhost:5000'}/api`;
+const API_BASE_URL = `${'https://admin-backend-fjzy.onrender.com'}/api`;
+// const API_BASE_URL = `${'http://localhost:5000'}/api`;
 
 const initialState = {
   user: {
