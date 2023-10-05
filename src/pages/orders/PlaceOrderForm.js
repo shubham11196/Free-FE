@@ -44,8 +44,6 @@ export default function PlaceOrderForm() {
   const onSubmit = async () => {
    await axios.post(`${'https://admin-backend-fjzy.onrender.com'}/api/orders/placeOrder`, logdata);
     toast("Order Placed Successfully");
-    // history.push('/orders')
-
   }
   return (
     <div>
@@ -112,14 +110,6 @@ export default function PlaceOrderForm() {
                   </FormGroup>
                   <FormGroup>
                     <Label for="bardanas">Bardana</Label>
-                    {/* <Input
-                      type="text"
-                      name="bardanas"
-                      placeholder="Enter Bardana"
-                      value={logdata.bardanas}
-                      onChange={handleChange}
-
-                    /> */}
                     <select
                       value={logdata.bardanas}
                       name="bardanas"

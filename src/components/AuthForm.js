@@ -14,18 +14,13 @@ function AuthForm({ authState }) {
 
   useEffect(() => {
     if(isAuthenticated){
-      setData({ ...logdata, email: "", password: "", role: "" })
+      setData({ ...logdata, email: "", password: "" })
       
       authState === 'SIGNUP' ? toast("User Registered Successfully") :toast("User Logged In Successfully");
       setTimeout(() => {
         history.push('/orders')
       }, 1400)
-      // let storageData = {
-      //   token: token,
-      //   user: user 
-      // };
-      localStorage.setItem('email', logdata.email);
-      localStorage.setItem('role', logdata.role);
+      
 
     }
   },[isAuthenticated,user]);
@@ -33,7 +28,6 @@ function AuthForm({ authState }) {
   const [logdata, setData] = useState({
     email: "",
     password: "",
-    role: ""
   });
 
   const handleChange = (e) => {
@@ -48,8 +42,8 @@ function AuthForm({ authState }) {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    const { email, password, role } = logdata;
-    const data = { email, password, role };
+    const { email, password } = logdata;
+    const data = { email, password };
 
     if (authState === "SIGNUP") {
       dispatch(register(data));
@@ -82,27 +76,6 @@ function AuthForm({ authState }) {
         <Label for="password">Enter Password</Label>
         <Input name="password" type="password" value={logdata.password} onChange={handleChange} />
       </FormGroup>
-
-      <FormGroup>
-        <Label for="deliveryTime">User Role</Label>
-        <br />
-        <select
-          value={logdata.role}
-          name="role"
-          style={{ width: "100%", height: "40px" }}
-          onChange={handleChange}
-        >
-          <option>Select User Role</option>
-          <option value="Super Admin">Super Admin</option>
-          <option value="Admin">Admin</option>
-          <option value="Broker">Broker</option>
-          <option value="Supplier">Supplier</option>
-          <option value="Seller">Seller</option>
-
-
-        </select>
-      </FormGroup>
-
       <FormGroup check>
 
         {authState === "SIGNUP" ?

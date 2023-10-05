@@ -7,13 +7,32 @@ import {
   } from 'reactstrap';
 import OrdersTable from '../../components/Orders/BrokerOrdersTable';
 import { getOrders }  from '../../redux/actions/OrderActions';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from 'react-router-dom';
 
 export default function OrderSuperAdminPage() {
     const [orders, setOrders] = useState([]);
-    // const role = localStorage.getItem("role");
     const history = useHistory();
+    const auth = useSelector(state=> state.auth);
+    console.log(auth.user.role, "auth");
+    const { user: {role}} = auth;
+    const columns =[
+                  'S No.',
+                  'Date',
+                  'Product Name',
+                  'Quantity',
+                  'Rate',
+                  'Packing Bardana',
+                  'Brokerage',
+                  'Delivery Time',
+                  'Firm Name',                    
+                  'Status',          
+    ];
+
+    if(role==="Super Admin"){
+      columns.push("Actions","Purchase Actions")
+    }
+
     useEffect(()=>{
       fetch(`${'https://admin-backend-fjzy.onrender.com'}/api/orders`)
       .then(res=>res.json())
@@ -21,10 +40,6 @@ export default function OrderSuperAdminPage() {
     },[]);
     const dispatch = useDispatch();
 
-    console.log(orders,'orders data');
-
-    // const orders = useSelector((state) => state.orders);
-  
 
   useEffect(() => {
     dispatch(getOrders());
@@ -38,7 +53,11 @@ export default function OrderSuperAdminPage() {
         <Card>
             
             <CardHeader>Orders</CardHeader>
-            <Button onClick={handleClick}color="primary" style={{width:"150px", marginLeft: "40px", marginTop: "30px"}}>Place Order</Button>
+            {
+              role=== "Broker" && 
+              <Button onClick={handleClick}color="primary" style={{width:"150px", marginLeft: "40px", marginTop: "30px"}}>Place Order</Button>
+
+            }
 
             <CardBody>
                 <OrdersTable

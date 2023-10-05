@@ -73,8 +73,7 @@ const Header = () => {
   };
 
   const signout = () => {
-    dispatch(logout);
-    localStorage.clear();
+    dispatch(logout());
     history.push('/login')
   }
     return (

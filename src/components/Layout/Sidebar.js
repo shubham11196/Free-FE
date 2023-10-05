@@ -89,7 +89,6 @@ const navItems = [
 ];
 
 const bem = bn.create('sidebar');
-console.log("navComponents",navComponents)
 class Sidebar extends React.Component {
   state = {
     isOpenComponents: false,

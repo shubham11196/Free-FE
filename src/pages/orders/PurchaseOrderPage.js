@@ -10,9 +10,7 @@ import {
     Row,
     Form
 } from 'reactstrap';
-// import Page from '../../components/Page';
 import { Label } from 'reactstrap';
-// import PurchaseDetailsTable from '../../components/Orders/PurchaseDetailsTable';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -56,20 +54,6 @@ export default function PurchaseOrderPage() {
     const [ commAdd, setCommAdd] = useState(0);
     const [ commSub, setCommSub] = useState(0);
 
-    // const calculateFreight = (e) => {
-    //   const { name, value } = e.target;
-    //   // if(name === "freightAdd")
-         
-    // }
-
-  
-
-    // const calculateComm = ()  => {
-
-    // }
-
-    
-    
     const handleQuantityChange = (e) => {
       const { name, value } = e.target;
       let minQty = addFields.qty
@@ -90,8 +74,6 @@ export default function PurchaseOrderPage() {
 
           }
       })
-      console.log("Minimum", quantityData);
-      console.log("Minimum", Math.min(quantityData.billingWeight, quantityData.kantaWeight))
       setQuantityData(() => {
           return {
               ...quantityData,
@@ -145,7 +127,6 @@ export default function PurchaseOrderPage() {
 
                 setDeductions(res.data.data[0].deductions);
                 setOrder(res.data.data)
-                console.log("responseesssss", res.data.data)
             });
         viewItem();
         viewAdditionalFields();
@@ -177,7 +158,6 @@ export default function PurchaseOrderPage() {
         addFields
         );
         setAddFields(res.data.data[0])
-        console.log("my response", res);
     }
     const handlePurchaseChange = (e, product, i) =>{
       e.preventDefault();
@@ -200,25 +180,19 @@ export default function PurchaseOrderPage() {
 
 
     const savePurchase = (id) =>{
-      console.log(purchase,'purchase data');
       axios.post(`${'https://admin-backend-fjzy.onrender.com'}/api/orders/createVoucher/${id}`,purchase).then(res=>console.log(res));
       toast("Voucher data added Successfully");
 
     }
 
     const saveDeductions = async () =>{
-      console.log(deductions,'deduction data');
       let body = {...deductions, 
         freight: Number(deductions.freight) + Number(freightAdd) - Number(freightSub),
         commission: Number(deductions.commission) + Number(commAdd) - Number(commSub)
       }
-      console.log("my body", body)
-      const response = await axios.post(`${'https://admin-backend-fjzy.onrender.com'}/api/orders/addDeductions/${id}`,body).then(res=>console.log(res));
-      console.log(response, "my res");
+      await axios.post(`${'https://admin-backend-fjzy.onrender.com'}/api/orders/addDeductions/${id}`,body).then(res=>console.log(res));
       toast("Deductions added Successfully");
-
     }
-    console.log("My fields",optionalFields);
     return (
         <div>
             <Card>

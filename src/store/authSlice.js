@@ -5,7 +5,8 @@ const API_BASE_URL = `${'https://admin-backend-fjzy.onrender.com'}/api`;
 
 const initialState = {
   user: {
-    role:null
+    role:null,
+    email: ""
   },
   token:'',
   isAuthenticated: false,
@@ -47,12 +48,12 @@ export const register = createAsyncThunk('auth/register', async (data, thunkAPI)
 // Async thunk for logging out
 export const logout = createAsyncThunk('authentication/logout', async (_, thunkAPI) => {
   try {
-    // const response = await axios.post(`${API_BASE_URL}/users/logout`);
-    
-        const response = await axios.post(`http://localhost:5000/api/users/logout`);
+
+        const response = await axios.post(`${API_BASE_URL}/users/logout`);
 
     if (response.status === 200) {
         localStorage.clear();
+        return true;
     } else {
       throw new Error('Logout failed');
     }
@@ -69,6 +70,8 @@ const authenticationSlice = createSlice({
         state.isAuthenticated = true;
         state.user = action.payload.userlogin;
         state.token = action.payload.token;
+        localStorage.setItem('email', state.user.email);
+        localStorage.setItem('role', state.user.role);
     }
   },
   extraReducers: (builder) => {
@@ -79,6 +82,7 @@ const authenticationSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         authenticationSlice.caseReducers.saveUserDetails(state, action);
+        
       })
       .addCase(login.rejected, (state, action) => {
         state.error = action.payload;
@@ -104,7 +108,8 @@ const authenticationSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(logout.fulfilled, (state) => {
+      .addCase(logout.fulfilled, (state, action) => {
+        console.log("fulfilled");
         state.user = null;
         state.isAuthenticated = false;
         state.loading = false;
