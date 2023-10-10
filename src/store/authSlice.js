@@ -73,6 +73,7 @@ const authenticationSlice = createSlice({
         state.token = action.payload.token;
         localStorage.setItem('email', state.user.email);
         localStorage.setItem('role', state.user.role);
+        localStorage.setItem('token', state.token);
     }
   },
   extraReducers: (builder) => {
@@ -110,10 +111,10 @@ const authenticationSlice = createSlice({
         state.error = null;
       })
       .addCase(logout.fulfilled, (state, action) => {
-        console.log("fulfilled");
         state.user = null;
         state.isAuthenticated = false;
         state.loading = false;
+        localStorage.clear();
       })
       .addCase(logout.rejected, (state, action) => {
         state.error = action.payload;

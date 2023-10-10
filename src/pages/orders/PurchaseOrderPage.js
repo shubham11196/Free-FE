@@ -8,16 +8,36 @@ import {
     Button,
     Input,
     Row,
-    Form
+    Form,
+    ModalFooter,
+    Modal,
+    ModalHeader,
+    ModalBody
 } from 'reactstrap';
 import { Label } from 'reactstrap';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import EditIcon from '@mui/icons-material/Edit';
+
 
 export default function PurchaseOrderPage() {
     const [order, setOrder] = useState([]);
     const [purchase, setPurchase] = useState([]);
+    const [modalState, setModalState] = useState({
+        modal: false,
+        modal_backdrop: false,
+        modal_nested_parent: false,
+        modal_nested: false,
+        backdrop: true,
+    });
+
+    const toggle = () => {
+        return setModalState({
+            ...modalState,
+            modal: !modalState.modal,
+        });
+    };
     const [deductions, setDeductions] = useState({
         freight: 0,
         dala: 0,
@@ -42,45 +62,45 @@ export default function PurchaseOrderPage() {
         bardanaClaim: "",
         qualityClaimPercent: "",
         qualityClaim: ""
-    }) 
+    })
 
     const [quantityData, setQuantityData] = useState({
-      billingWeight: 0,
-      kantaWeight: 0
+        billingWeight: 0,
+        kantaWeight: 0
     });
 
-    const [ freightAdd, setFrieghtAdd] = useState(0);
-    const [ freightSub, setFrieghtSub] = useState(0);
-    const [ commAdd, setCommAdd] = useState(0);
-    const [ commSub, setCommSub] = useState(0);
+    const [freightAdd, setFrieghtAdd] = useState(0);
+    const [freightSub, setFrieghtSub] = useState(0);
+    const [commAdd, setCommAdd] = useState(0);
+    const [commSub, setCommSub] = useState(0);
 
     const handleQuantityChange = (e) => {
-      const { name, value } = e.target;
-      let minQty = addFields.qty
-      if(name === "billingWeight"){
-        let newValue = value ? value : 0;
-        minQty = Math.min(Number(newValue), Number(quantityData.kantaWeight))
+        const { name, value } = e.target;
+        let minQty = addFields.qty
+        if (name === "billingWeight") {
+            let newValue = value ? value : 0;
+            minQty = Math.min(Number(newValue), Number(quantityData.kantaWeight))
 
-      }
-      if(name === "kantaWeight"){
-        let newValue = value ? value : 0;
-        minQty = Math.min(Number(quantityData.billingWeight), Number(newValue))
+        }
+        if (name === "kantaWeight") {
+            let newValue = value ? value : 0;
+            minQty = Math.min(Number(quantityData.billingWeight), Number(newValue))
 
-      }
-      setAddFields(() => {
-          return {
-              ...addFields,
-              qty: minQty
+        }
+        setAddFields(() => {
+            return {
+                ...addFields,
+                qty: minQty
 
-          }
-      })
-      setQuantityData(() => {
-          return {
-              ...quantityData,
-              [name]: parseInt(value)
+            }
+        })
+        setQuantityData(() => {
+            return {
+                ...quantityData,
+                [name]: parseInt(value)
 
-          }
-      })
+            }
+        })
     }
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -107,17 +127,17 @@ export default function PurchaseOrderPage() {
     }
 
     const handleDeductionChange = (e) => {
-      const { name, value } = e.target;
+        const { name, value } = e.target;
 
-      setDeductions(() => {
-          return {
-              ...deductions,
-              [name]: value
+        setDeductions(() => {
+            return {
+                ...deductions,
+                [name]: value
 
-          }
-      })
-  }
-    
+            }
+        })
+    }
+
     const id = localStorage.getItem("purchaseId");
     useEffect(() => {
         axios.get(`${'https://admin-backend-fjzy.onrender.com'}/api/orders/${id}`)
@@ -130,68 +150,76 @@ export default function PurchaseOrderPage() {
             });
         viewItem();
         viewAdditionalFields();
-        
+
     }, []);
     const addOptionalFields = async () => {
-        await axios.post(`${'https://admin-backend-fjzy.onrender.com'}/api/orders/addFields/${id}`, 
+        await axios.post(`${'https://admin-backend-fjzy.onrender.com'}/api/orders/addFields/${id}`,
             optionalFields
         );
         toast("Optional Field added Successfully");
 
     }
     const addItem = async () => {
-        await axios.post(`${'https://admin-backend-fjzy.onrender.com'}/api/orders/addItem/${id}`, 
-        addFields
+        await axios.post(`${'https://admin-backend-fjzy.onrender.com'}/api/orders/addItem/${id}`,
+            addFields
         );
         toast("Item added Successfully");
 
     }
     const viewAdditionalFields = async () => {
-        const res = await axios.get(`${'https://admin-backend-fjzy.onrender.com'}/api/orders/viewOptionalFields/${id}`, 
-        addFields
+        const res = await axios.get(`${'https://admin-backend-fjzy.onrender.com'}/api/orders/viewOptionalFields/${id}`,
+            addFields
         );
         setOptionalFields(res.data.data[0])
         console.log("my response", res);
     }
     const viewItem = async () => {
-        const res = await axios.get(`${'https://admin-backend-fjzy.onrender.com'}/api/orders/viewItems/${id}`, 
-        addFields
+        const res = await axios.get(`${'https://admin-backend-fjzy.onrender.com'}/api/orders/viewItems/${id}`,
+            addFields
         );
         setAddFields(res.data.data[0])
     }
-    const handlePurchaseChange = (e, product, i) =>{
-      e.preventDefault();
-      let oldPurchases = [...purchase];
-      product[e.target.name] = e.target.value;
-      oldPurchases[i] = product;
-      setPurchase(oldPurchases);
+    const handlePurchaseChange = (e, product, i) => {
+        e.preventDefault();
+        let oldPurchases = [...purchase];
+        product[e.target.name] = e.target.value;
+        oldPurchases[i] = product;
+        setPurchase(oldPurchases);
     }
+
+    console.log(purchase, 'purchase state');
 
     const addNewPurchase = () => {
-      let newPurchase = {
-        productName: '',
-        quantity: 0,
-        unit:0,
-        price:0
-      };
-      setPurchase(oldState => [...oldState, newPurchase]);
+        let newPurchase = {
+            productName: '',
+            quantity: 0,
+            unit: 0,
+            price: 0
+        };
+        setPurchase(oldState => [...oldState, newPurchase]);
     }
 
 
 
-    const savePurchase = (id) =>{
-      axios.post(`${'https://admin-backend-fjzy.onrender.com'}/api/orders/createVoucher/${id}`,purchase).then(res=>console.log(res));
-      toast("Voucher data added Successfully");
+    const savePurchase = (id) => {
+        axios.post(`${'https://admin-backend-fjzy.onrender.com'}/api/orders/createVoucher/${id}`, purchase).then(res => console.log(res));
+        toast("Voucher data added Successfully");
 
     }
 
-    const saveDeductions = async () =>{
-      let body = {...deductions, 
-        freight: Number(deductions.freight) + Number(freightAdd) - Number(freightSub),
-        commission: Number(deductions.commission) + Number(commAdd) - Number(commSub)
-      }
-      await axios.post(`${'https://admin-backend-fjzy.onrender.com'}/api/orders/addDeductions/${id}`,body).then(res=>console.log(res));
-      toast("Deductions added Successfully");
+    const saveDeductions = async () => {
+        let body = {
+            ...deductions,
+            freight: Number(deductions.freight) + Number(freightAdd) - Number(freightSub),
+            commission: Number(deductions.commission) + Number(commAdd) - Number(commSub)
+        }
+        await axios.post(`${'https://admin-backend-fjzy.onrender.com'}/api/orders/addDeductions/${id}`, body).then(res => console.log(res));
+        toast("Deductions added Successfully");
+    }
+
+    const setModalData = (pur) => {
+        toggle();
+        console.log(pur, 'pur data here');
     }
 
     console.log("Purchase", purchase.length)
@@ -201,68 +229,70 @@ export default function PurchaseOrderPage() {
 
                 <CardHeader>Purchase Voucher</CardHeader>
 
-                <CardBody style={{marginLeft:"150px"}}>
+                <CardBody style={{ marginLeft: "150px" }}>
                     {order.map((pur, index) => {
-                    const today = new Date(pur.date);
-                    const month = today.getMonth()+1;
-                    const year = today.getFullYear();
-                    const date = today.getDate();
-                    const currentDate = month + "/" + date + "/" + year;
-                    return(
-                       <div class="container">
-                       <div class="row">
-                           <div class="col-sm-4">
-                           <Label style={{fontWeight: "600"}}>Series : </Label>
-                           &nbsp; &nbsp; 
-                               {pur.productName}
-                           </div>
-                           <div class="col-sm-4">
-                           <Label style={{fontWeight: "600"}}>Date : </Label>
-                           &nbsp; &nbsp; 
-                               {currentDate}
-                               
-                           </div>
-                           <div class="col-sm-4">
-                           <Label style={{fontWeight: "600"}}>Vch No : </Label>
-                           &nbsp; &nbsp; 
-                               {pur.voucherId}
-                           </div>
-                          
+                        const today = new Date(pur.date);
+                        const month = today.getMonth() + 1;
+                        const year = today.getFullYear();
+                        const date = today.getDate();
+                        const currentDate = month + "/" + date + "/" + year;
+                        return (
+                            <div class="container">
+                                <div class="row">
 
-                       </div>
+                                    <div class="col-sm-4">
+                                        <Label style={{ fontWeight: "600" }}>Series : </Label>
+                                        &nbsp; &nbsp;
+                                        {pur.productName}
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <Label style={{ fontWeight: "600" }}>Date : </Label>
+                                        &nbsp; &nbsp;
+                                        {currentDate}
 
-                       <div class="row">
-                           <div class="col-sm-4">
-                           <Label style={{fontWeight: "600"}}>Party : </Label>
-                           &nbsp; &nbsp; 
-                               Ashok Bansal Ji Gajraula
-                           </div>
-                           <div class="col-sm-4">
-                           <Label style={{fontWeight: "600"}}>Narration : </Label>
-                             <textarea rows={2} cols={35} placeholder='Enter comments here'>
-                             </textarea>
-                           </div>
-                           <div class="col-sm-4">
-                          
-                           </div>
-                           
-                       </div>
-                    
-                   </div>
-                    )
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <Label style={{ fontWeight: "600" }}>Vch No : </Label>
+                                        &nbsp; &nbsp;
+                                        {pur.voucherId}
+                                    </div>
 
-                })}
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <Label style={{ fontWeight: "600" }}>Party : </Label>
+                                        &nbsp; &nbsp;
+                                        Ashok Bansal Ji Gajraula
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <Label style={{ fontWeight: "600" }}>Narration : </Label>
+                                        <textarea rows={2} cols={35} placeholder='Enter comments here'>
+                                        </textarea>
+                                    </div>
+                                    <div class="col-sm-4">
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        )
+
+                    })}
 
 
                 </CardBody>
             </Card>
 
-            <br/>
+            <br />
             <Card>
                 <CardBody>
-                  
-                    <table style={{marginLeft:"135px"}}>
+
+                    <table>
                         <thead>
+                            <th>Action</th>
                             <th>Item</th>
                             <th>Quantity</th>
                             <th>Unit</th>
@@ -271,57 +301,79 @@ export default function PurchaseOrderPage() {
 
                         </thead>
 
-                        {purchase.lenth>0 ?
+                        {purchase.length > 0 &&
                             <tbody>
-                            {purchase.map((pur, idx) => (
-                                <tr>
-                                    <th>
-                                        <input/>
-                                    </th>
-                                    <th>
-                                        <input name='quantity' onChange={(e)=> handlePurchaseChange(e, pur, idx)} value={pur.quantity}></input>
-                                    </th>
-                                    <th>
-                                        <input name='unit' onChange={(e)=> handlePurchaseChange(e, pur, idx)} value={pur.unit}></input>
-                                    </th>
-                                    <th>
-                                        <input name='price' onChange={(e)=> handlePurchaseChange(e, pur, idx)} value={pur.price}></input>
-                                    </th>
-                                    <th>
-                                        <input value={pur.price * pur.quantity}></input>
-                                    </th>
-                                </tr>
-                            ))}
-                        </tbody> :
-                            <Row style={{marginTop: "20px"}}>
-                        <Col md="8">                        
+                                {purchase.map((pur, idx) => (
+                                    <tr key={idx}>
+                                        <td>
+                                            <Button onClick={() => setModalData(pur)}>
+                                                <EditIcon />
+                                            </Button>
+                                        </td>
+                                        <th>
+                                            <input />
+                                        </th>
+                                        <th>
+                                            <input name='quantity' onChange={(e) => handlePurchaseChange(e, pur, idx)} value={pur.quantity}></input>
+                                        </th>
+                                        <th>
+                                            <input name='unit' onChange={(e) => handlePurchaseChange(e, pur, idx)} value={pur.unit}></input>
+                                        </th>
+                                        <th>
+                                            <input name='price' onChange={(e) => handlePurchaseChange(e, pur, idx)} value={pur.price}></input>
+                                        </th>
+                                        <th>
+                                            <input value={pur.price * pur.quantity}></input>
+                                        </th>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        }
+
+                    </table>
+
+                    <Row style={{ marginTop: "20px" }}>
+                        <Col md="8">
                         </Col>
-                        <Col md="3">  
-                            <button style={{marginRight: "20px"}} onClick={()=>addNewPurchase()} className='btn btn-primary'>Add New</button>
-                            <button onClick={()=>savePurchase()} className='btn btn-primary'>Save</button>
+                        <Col md="3">
+                            <button style={{ marginRight: "20px" }} onClick={() => addNewPurchase()} className='btn btn-primary'>Add New</button>
+                            <button onClick={() => savePurchase()} className='btn btn-primary'>Save</button>
                         </Col>
-                        <Col md="1">  
+                        <Col md="1">
                         </Col>
                     </Row>
-                        }
-                    </table>
-                    
-              </CardBody>
+
+                </CardBody>
             </Card>
-            
-            <br/>
-            <Row>
-            <Col md={6}>
+            {/* modal start here  */}
+            <Modal
+                isOpen={modalState.modal}
+                toggle={toggle}
+            >
+                <ModalHeader toggle={toggle}>
+                    Modal title
+                </ModalHeader>
+                <ModalBody>
+                    Form creta here
+                    <br />
+                </ModalBody>
+                <ModalFooter>
+                    <Button
+                        color="primary"
+                        onClick={() => toggle()}>
+                        {/* submit data in state */}
+                        Do Something
+                    </Button>{' '}
+                    <Button
+                        color="secondary"
+                        onClick={() => toggle()}>
+                        Cancel
+                    </Button>
+                </ModalFooter>
+            </Modal>
 
-            
-          </Col>
-          <Col md={6}>
-
-            
-
-          </Col>
-        </Row>
-        <ToastContainer />
+            <br />
+            <ToastContainer />
         </div>
     )
 }
