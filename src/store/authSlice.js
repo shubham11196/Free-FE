@@ -53,7 +53,7 @@ export const logout = createAsyncThunk('authentication/logout', async (_, thunkA
         const response = await axios.post(`${API_BASE_URL}/users/logout`);
 
     if (response.status === 200) {
-        localStorage.clear();
+        // localStorage.clear();
         return true;
     } else {
       throw new Error('Logout failed');

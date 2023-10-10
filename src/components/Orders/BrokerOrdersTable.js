@@ -14,13 +14,13 @@ const OrdersTable = ({ headers, usersData, ...restProps }) => {
   const history = useHistory();
 
   const handleApprove = async (id) => {
-    await axios.post(`${'https://admin-backend-fjzy.onrender.com'}/api/orders/approveOrder/${id}`);
+    await axios.post(`${'http://localhost:5000'}/api/orders/approveOrder/${id}`);
     toast("Order Approved Successfully");
   }
   const role = localStorage.getItem("role")
 
   const handleDisapprove = async (id) => {
-    await axios.post(`${'https://admin-backend-fjzy.onrender.com'}/api/orders/disapproveOrder/${id}`);
+    await axios.post(`${'http://localhost:5000'}/api/orders/disapproveOrder/${id}`);
     toast("Order Rejected Successfully");
   }
 
@@ -28,6 +28,8 @@ const OrdersTable = ({ headers, usersData, ...restProps }) => {
     localStorage.setItem("purchaseId", id)
     history.push(`/purchase/${id}`)
   }
+
+
   return (
     <Table responsive hover {...restProps}>
       <thead>
@@ -47,17 +49,34 @@ const OrdersTable = ({ headers, usersData, ...restProps }) => {
             <td className="align-middle text-center">{usersData.brokerage}</td>
             <td className="align-middle text-center">{usersData.deliveryTime}</td>
             <td className="align-middle text-center">{usersData.firmName}</td>
-            <td className="align-middle text-center">{usersData.approvalStatus ? <span style={{ color: "green", fontWeight: "600" }}>Approved</span> : <span style={{ color: "red", fontWeight: "600" }}>Rejected</span>}</td>
+            <td className="align-middle text-center">
+              {usersData.approvalStatus === "Pending" ? <div style={{color: "blue", weight: "700"}}>Pending</div>:""}
+              {usersData.approvalStatus === "Disapprove" ? <div style={{color: "red", weight: "700"}}>Disaproved</div>: ""}
+              {usersData.approvalStatus === "Approved" ? <div style={{color: "green", weight: "700"}}>Approved</div>: ""}
+
+            </td>
             <td className="align-middle text-center">
               {role === "Super Admin" ?
-                <div>{!usersData.approvalStatus ?
+                <div>
+                {usersData.approvalStatus === "Pending" ?
                   <Button color="primary" size="sm" onClick={() => handleApprove(usersData.id)}>
                     Approve
                   </Button> :
-                  <Button style={{ marginLeft: "10px" }} onClick={() => handleDisapprove(usersData.id)} color="secondary" size="sm">
-                    Reject
-                  </Button>
+                  ""
                 }
+                {usersData.approvalStatus === "Disapprove" ?
+                  <Button color="primary" size="sm" onClick={() => handleApprove(usersData.id)}>
+                    Approve
+                  </Button> :
+                  ""
+                }
+                {usersData.approvalStatus === "Approved" ?
+                  <Button color="primary" size="sm" onClick={() => handleDisapprove(usersData.id)}>
+                    Disapprove
+                  </Button> :
+                  ""
+                }
+
                 </div> :
                 <>
                   <EditIcon style={{ marginRight: "10px" }} /><RemoveRedEyeIcon />

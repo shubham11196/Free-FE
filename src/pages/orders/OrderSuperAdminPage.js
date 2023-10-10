@@ -35,12 +35,12 @@ export default function OrderSuperAdminPage() {
     }
     console.log(role, "role");
     useEffect(()=>{
-      fetch(`${'https://admin-backend-fjzy.onrender.com'}/api/orders`)
+      fetch(`${'http://localhost:5000'}/api/orders`)
       .then(res=>res.json())
       .then(res=> setOrders(res.data));
     },[]);
     const dispatch = useDispatch();
-
+    console.log("orsrerrsrs", orders)
 
   useEffect(() => {
     dispatch(getOrders());

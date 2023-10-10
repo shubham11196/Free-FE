@@ -42,7 +42,7 @@ export default function PlaceOrderForm() {
     })
   };
   const onSubmit = async () => {
-   await axios.post(`${'https://admin-backend-fjzy.onrender.com'}/api/orders/placeOrder`, logdata);
+   await axios.post(`${'http://localhost:5000'}/api/orders/placeOrder`, logdata);
     toast("Order Placed Successfully");
   }
   return (

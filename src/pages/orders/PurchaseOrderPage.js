@@ -193,6 +193,8 @@ export default function PurchaseOrderPage() {
       await axios.post(`${'https://admin-backend-fjzy.onrender.com'}/api/orders/addDeductions/${id}`,body).then(res=>console.log(res));
       toast("Deductions added Successfully");
     }
+
+    console.log("Purchase", purchase.length)
     return (
         <div>
             <Card>
@@ -254,6 +256,7 @@ export default function PurchaseOrderPage() {
 
                 </CardBody>
             </Card>
+
             <br/>
             <Card>
                 <CardBody>
@@ -267,11 +270,13 @@ export default function PurchaseOrderPage() {
                             <th>Amount(Rs.)</th>
 
                         </thead>
-                        <tbody>
+
+                        {purchase.lenth>0 ?
+                            <tbody>
                             {purchase.map((pur, idx) => (
                                 <tr>
                                     <th>
-                                        <input name='productName' onChange={(e)=> handlePurchaseChange(e, pur, idx)} value={pur.productName}></input>
+                                        <input/>
                                     </th>
                                     <th>
                                         <input name='quantity' onChange={(e)=> handlePurchaseChange(e, pur, idx)} value={pur.quantity}></input>
@@ -287,9 +292,8 @@ export default function PurchaseOrderPage() {
                                     </th>
                                 </tr>
                             ))}
-                        </tbody>
-                    </table>
-                    <Row style={{marginTop: "20px"}}>
+                        </tbody> :
+                            <Row style={{marginTop: "20px"}}>
                         <Col md="8">                        
                         </Col>
                         <Col md="3">  
@@ -299,327 +303,21 @@ export default function PurchaseOrderPage() {
                         <Col md="1">  
                         </Col>
                     </Row>
-              </CardBody>
-            </Card>
-            <br/>
-            <Card>
-                <CardBody>
-                  
-                    <table style={{marginLeft:"135px", border: "1px solid black"}}>
-                        <thead>
-                          <tr>
-                          <th>S No.</th>
-                            <th>Bill Sundry</th>
-                            <th>@</th>
-                            <th>Amount(Rs.)</th>
-                          </tr>
-                           
-                        </thead>
-                        <tbody>
-                            <tr>
-                              <td>
-                              &nbsp;&nbsp;&nbsp;1.
-                              </td>
-                              <td>Freight (add)</td>
-                              <td>
-                              <input type="number" onChange={(e) => setFrieghtAdd(e.target.value)} value={freightAdd}/>
-
-                              </td>
-                              <td>
-                              <input type="number" value={Number(deductions.freight) + Number(freightAdd) - Number(freightSub)}/>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                              &nbsp;&nbsp;&nbsp;2.
-
-                              </td>
-                              <td>Freight (less)</td>
-                              <td>
-                              <input type="number" onChange={(e) => setFrieghtSub(e.target.value)} value={freightSub}/>
-
-                              </td>
-                              <td>
-                              <input type="number" value={Number(deductions.freight) + Number(freightAdd) - Number(freightSub)}/>
-
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                              &nbsp;&nbsp;&nbsp;3.
-                              </td>
-                              <td>Dala (Labour Charge)</td>
-                              <td></td>
-                              <td>
-                              <input name="dala" type="number" onChange={handleDeductionChange} value={deductions.dala}/>
-
-                              </td>
-                            </tr>
-
-                            <tr>
-                              <td>
-                              &nbsp;&nbsp;&nbsp;4.
-                              </td>
-                              <td>Kanta Charge</td>
-                              <td></td>
-                              <td>
-                              <input name="kanta" type="number" onChange={(e) => handleDeductionChange(e)} value={deductions.kanta}/>
-
-
-                              </td>
-                            </tr>
-
-                            <tr>
-                              <td>
-                              &nbsp;&nbsp;&nbsp;5.
-                              </td>
-                              <td>CD (Cash Discount)</td>
-                              <td></td>
-                              <td>
-                              <input name="cd" type="number" onChange={handleDeductionChange} value={deductions.cd}/>
-
-
-                              </td>
-                            </tr>
-
-                            <tr>
-                              <td>
-                              &nbsp;&nbsp;&nbsp;6.
-                              </td>
-                              <td>TDS / TCS</td>
-                              <td></td>
-                              <td>
-                              <input name="tds" type="number" onChange={handleDeductionChange} value={deductions.tds}/>
-
-                              </td>
-                            </tr>
-
-                            <tr>
-                              <td>
-                              &nbsp;&nbsp;&nbsp;7.
-
-                              </td>
-                              <td>Bardana Chowker Qty / Amount</td>
-                              <td></td>
-                              <td>
-                              <input name="bardana" type="number" onChange={handleDeductionChange} value={deductions.bardana}/>
-
-                              </td>
-                            </tr>
-
-                            <tr>
-                              <td>
-                              &nbsp;&nbsp;&nbsp;8.
-                              </td>
-                              <td>Brokerage</td>
-                              <td></td>
-                              <td>
-                              <input name="brokerage" type="number" onChange={handleDeductionChange} value={deductions.brokerage}/>
-
-                              </td>
-                            </tr>
-
-                         
-
-                            <tr>
-                              <td>
-                              &nbsp;&nbsp;&nbsp;9.
-
-                              </td>
-                              <td>Commission (add)</td>
-                              <td>
-                              <input type="number" onChange={(e) => setCommAdd(e.target.value)} value={commAdd}/>
-
-                              </td>
-                              <td>
-                              <input type="number" value={Number(deductions.commission) + Number(commAdd) - Number(commSub)}/>
-                              </td>
-                            </tr>
-
-                            <tr>
-                              <td>
-                              &nbsp;&nbsp;&nbsp;10.
-                              </td>
-                              <td>Commission (less)</td>
-                              <td>
-                              <input type="number" onChange={(e) => setCommSub(e.target.value)} value={commSub}/>
-
-                              </td>
-                              <td>
-                              <input type="number" value={Number(deductions.commission) + Number(commAdd) - Number(commSub)}/>
-                              </td>
-                            </tr>
-                            
-                        </tbody>
+                        }
                     </table>
-                    <Row style={{marginTop: "20px"}}>
-                        <Col md="8">                        
-                        </Col>
-                        <Col md="3">  
-                            {/* <button style={{marginRight: "20px"}} onClick={()=>addNewPurchase()} className='btn btn-primary'>Add New</button> */}
-                            <button onClick={()=>saveDeductions(deductions.id)} className='btn btn-primary'>Save</button>
-                        </Col>
-                        <Col md="1">  
-                        </Col>
-                    </Row>
+                    
               </CardBody>
             </Card>
-          <Row>
+            
+            <br/>
+            <Row>
             <Col md={6}>
 
-            <Card style={{marginLeft:"40px"}}>
-             <CardHeader>Optional Fields</CardHeader>
-
-              <CardBody>
-                <Form>
-                  <FormGroup>
-                    <Label for="vehicleNo">Vehicle No.</Label>
-                    <Input
-                      type="text"
-                      name="vehicleNo"
-                      placeholder="Enter Vehicle No."
-                      value={optionalFields.vehicleNo}
-                      onChange={(e) => handleChange(e)}
-
-                    />
-                  </FormGroup>
-                   <FormGroup>
-                    <Label for="brokerage">Drivers Name</Label>
-                    <Input
-                      type="text"
-                      name="driverName"
-                      placeholder="Enter Driver Name"
-                      value={optionalFields.driverName}
-                      onChange={handleChange}
-
-                    />
-                  </FormGroup>
-                  <FormGroup>
-                    <Label for="loadingIncharge">Loading Incharge</Label>
-                    <Input
-                      type="text"
-                      name="loadingIncharge"
-                      placeholder="Enter Loading Incharge"
-                      value={optionalFields.loadingIncharge}
-                      onChange={handleChange}
-                    />
-                  </FormGroup>
-                  <FormGroup>
-                    <Label for="kantaSilipWeight">Kanta Silip Weight</Label>
-                    <Input
-                      type="text"
-                      name="kantaSilipWeight"
-                      placeholder="Enter Kanta Silip Weight"
-                      value={optionalFields.kantaSilipWeight}
-                      onChange={handleChange}
-                    />
-                  </FormGroup>
-                  <FormGroup>
-                    <Label for="dalalName">Dalal Name</Label>
-                    <Input
-                      type="text"
-                      name="dalalName"
-                      placeholder="Enter Dalal Name"
-                      value={optionalFields.dalalName}
-                      onChange={handleChange}
-                    />
-                  </FormGroup>
-
-                  <FormGroup check row>
-                    <Col sm={{ size: 10, offset: 2 }}>
-                      <Button onClick={addOptionalFields}>Submit</Button>
-                    </Col>
-                  </FormGroup>
-                </Form>
-              
-            </CardBody>
-          </Card>
-           
-
+            
           </Col>
           <Col md={6}>
 
-            <Card style={{marginRight:"40px"}}>
-             <CardHeader>Item Add Field / Description</CardHeader>
-
-              <CardBody>
-                <Form>
-                  <FormGroup>
-                    <Label for="qty">Billing Weight (Quantity in QTL)</Label>
-                    <Input
-                      type="number"
-                      name="billingWeight"
-                      placeholder="Enter Billing Weight"
-                      value={quantityData.billingWeight}
-                      onChange={(e) => handleQuantityChange(e)}
-
-                    />
-                  </FormGroup>
-                  <FormGroup>
-                    <Label for="qty">Kanta Weight</Label>
-                    <Input
-                      type="number"
-                      name="kantaWeight"
-                      placeholder="Enter Kanta Weight"
-                      value={quantityData.kantaWeight}
-                      onChange={(e) => handleQuantityChange(e)}
-
-                    />
-                  </FormGroup>
-                  <FormGroup>
-                    <Label for="qty">Accepted Weight</Label>
-                    <Input
-                      type="text"
-                      name="qty"
-                      placeholder="Enter Billing Weight"
-                      value={addFields.qty}
-                      onChange={handleItemChange}
-
-                    />
-                  </FormGroup>
-                   <FormGroup>
-                    <Label for="bardanaClaim">Bardana Claim</Label>
-                    <Input
-                      type="text"
-                      name="bardanaClaim"
-                      placeholder="Enter Bardana Claim"
-                      value={addFields.bardanaClaim}
-                      onChange={handleItemChange}
-
-                    />
-                  </FormGroup>
-                  <FormGroup>
-                    <Label for="qualityClaimPercent">Quality Claim %</Label>
-                    <Input
-                      type="number"
-                      name="qualityClaimPercent"
-                      placeholder="Enter Quality Claim %"
-                      value={addFields.qualityClaimPercent}
-                      onChange={handleItemChange}
-
-                    />
-                  </FormGroup>
-                  <FormGroup>
-                    <Label for="qualityClaim">Quality Claim</Label>
-                    <Input
-                      type="number"
-                      name="qualityClaim"
-                      placeholder="Enter Quantity"
-                      value={addFields.qualityClaim}
-                      onChange={handleItemChange}
-
-                    />
-                  </FormGroup>
-                  <FormGroup check row>
-                    <Col sm={{ size: 10, offset: 2 }}>
-                      <Button onClick={addItem}>Submit</Button>
-                    </Col>
-                  </FormGroup>
-                </Form>
-              
-            </CardBody>
-          </Card>
-           
+            
 
           </Col>
         </Row>

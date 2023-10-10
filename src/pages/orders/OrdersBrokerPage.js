@@ -15,11 +15,10 @@ export default function OrdersPage() {
   const [orders, setOrders] = useState([]);
   const history = useHistory();
     useEffect(()=>{
-      axios.get("https://admin-backend-fjzy.onrender.com/api/orders")
+      axios.get("http://localhost:5000/api/orders")
       .then(res=> setOrders(res.data.data));
     },[]);
     const dispatch = useDispatch();
-
 
   useEffect(() => {
     dispatch(getOrders());
@@ -28,6 +27,9 @@ export default function OrdersPage() {
   const handleClick = () => {
     history.push("/placeOrder")
   }
+  console.log("ordersssdddd",orders)
+  console.log("ordders",orders)
+
   return (
     <div>
         <Card>
