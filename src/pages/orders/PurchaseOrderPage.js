@@ -35,7 +35,7 @@ export default function PurchaseOrderPage() {
     const [voucherId, setVoucherId] = useState();
     const [voucher, setVoucher] = useState({});
     const [acceptedWeight, setAcceptedDate] = useState(0);
-    const [netQty,setNetQty] = useState(0);
+    const [netQty, setNetQty] = useState(0);
 
     const toggle = () => {
         return setModalState({
@@ -150,9 +150,10 @@ export default function PurchaseOrderPage() {
         axios.get(`${'https://admin-backend-fjzy.onrender.com'}/api/orders/${id}`)
             // .then(res => res.json())
             .then(res => {
+                console.log("My resss", res.data.data);
                 setPurchase(res.data.data[0].voucher);
 
-                setDeductions(res.data.data[0].deductions);
+                setDeductions(res.data.data[0].deductions[0]);
                 setOrder(res.data.data)
             });
         viewItem();
@@ -161,15 +162,15 @@ export default function PurchaseOrderPage() {
     }, []);
 
     const getVouchers = async () => {
-      const res = await axios.get(`${'http://localhost:5000'}/api/voucher/viewVoucherDetails/${id}`);
-      console.log("my response",res.data.data)
-      setVouchers(res.data.data);
+        const res = await axios.get(`${'http://localhost:5000'}/api/voucher/viewVoucherDetails/${id}`);
+        console.log("my voucher response", res)
+        setVouchers(res.data.data);
 
     }
     const updateVoucher = async (voucherId) => {
-      const res = await axios.get(`${'http://localhost:5000'}/api/voucher/addVoucherAdditionalData/${voucherId}`);
-      console.log("my response",res)
-      setVouchers(res.data.data);
+        const res = await axios.get(`${'http://localhost:5000'}/api/voucher/addVoucherAdditionalData/${voucherId}`);
+        console.log("my response", res)
+        setVouchers(res.data.data);
 
     }
     const addOptionalFields = async () => {
@@ -210,7 +211,7 @@ export default function PurchaseOrderPage() {
 
     const addNewPurchase = () => {
         let newPurchase = {
-            
+
             name: '',
             quantity: 0,
             price: 0,
@@ -222,36 +223,43 @@ export default function PurchaseOrderPage() {
     const getTotalAmount = () => {
         let amount = 0;
 
-        vouchers.map((v)=>{
+        vouchers.map((v) => {
             amount += v.quantity * v.price;
             return v;
         });
         return amount;
     }
 
+    const getTotalFreightDeductions = () => {
+        let amount = Number(deductions.freight) + deductions.dala + Number(deductions.kanta)
+            + deductions.cd + deductions.tds + Number(deductions.bardana) + deductions.brokerage
+            + deductions.commission
+        return amount;
+    }
+
 
 
     const savePurchase = (id) => {
-        console.log("purrrrr",purchase);
-        axios.post(`${'http://localhost:5000'}/api/voucher/addVoucherDetails/${voucherId}`, vouchers).then(res => console.log("my res",res));
+        console.log("purrrrr", purchase);
+        axios.post(`${'http://localhost:5000'}/api/voucher/addVoucherDetails/${voucherId}`, vouchers).then(res => console.log("my res", res));
         toast("Voucher data added Successfully");
 
     }
 
     const saveUpdateVoucher = (id) => {
-      axios.put(`${'http://localhost:5000'}/api/voucher/addVoucherAdditionalData/${voucherId}`, quantityData)
-      .then(res => console.log("my ressss",res))
-      .then(() => { 
-        toast("Voucher data updated Successfully");
-        getVouchers();
-        toggle();
-      })
-      .then(() => {
-        setNetQty()
-      });
-      
+        axios.put(`${'http://localhost:5000'}/api/voucher/addVoucherAdditionalData/${voucherId}`, quantityData)
+            .then(res => console.log("my ressss", res))
+            .then(() => {
+                toast("Voucher data updated Successfully");
+                getVouchers();
+                toggle();
+            })
+            .then(() => {
+                setNetQty()
+            });
 
-      
+
+
     }
 
     const saveDeductions = async () => {
@@ -267,18 +275,18 @@ export default function PurchaseOrderPage() {
     const setModalData = (pur, id) => {
         toggle();
         setQuantityData({
-          billingWeight: pur.billingWeight,
-          kantaWeight: pur.kantaWeight,
-          qualityClaimPercent: pur.qualityClaimPercent,
-          qualityClaim: pur.qualityClaim
-          })
-          console.log(pur, 'pur data here');
-          setVoucherId(id);
-          pur.acceptedWeight = pur.billingWeight < pur.kantaWeight ? pur.billingWeight : pur.kantaWeight;
-          setVoucher(pur);
+            billingWeight: pur.billingWeight,
+            kantaWeight: pur.kantaWeight,
+            qualityClaimPercent: pur.qualityClaimPercent,
+            qualityClaim: pur.qualityClaim
+        })
+        console.log(pur, 'pur data here');
+        setVoucherId(id);
+        pur.acceptedWeight = pur.billingWeight < pur.kantaWeight ? pur.billingWeight : pur.kantaWeight;
+        setVoucher(pur);
     }
 
-    console.log("Vouchersss", vouchers)
+    console.log("deductions", deductions[0])
     return (
         <div>
             <Card>
@@ -356,158 +364,161 @@ export default function PurchaseOrderPage() {
                             <th>Amount(Rs.)</th>
 
                         </thead>
+                        {console.log(vouchers, 'purrrrrrrr')}
 
-                        {vouchers.length > 0 &&
-                        <>
-                            <tbody>
-                                {vouchers.map((pur, idx) => (
-                                  <>
-                                  {console.log(pur,'pur')}
-                                    <tr key={idx}>
-                                        <td>
-                                            <Button onClick={() => setModalData(pur, pur.id)}>
-                                                <EditIcon />
-                                            </Button>
-                                        </td>
-                                        <th>
-                                        <input name='name' onChange={(e) => handlePurchaseChange(e, pur, idx)} value={pur.name}></input>
-                                        </th>
-                                        <th>
-                                            <input name='quantity' onChange={(e) => handlePurchaseChange(e, pur, idx)} value={pur.quantity}></input>
-                                        </th>
-                                        <th>
-                                            <input name='unit' onChange={(e) => handlePurchaseChange(e, pur, idx)} value={pur.unit}></input>
-                                        </th>
-                                        <th>
-                                            <input name='price' onChange={(e) => handlePurchaseChange(e, pur, idx)} value={pur.price}></input>
-                                        </th>
-                                        <th>
-                                            <input value={pur.price * pur.quantity}></input>
-                                        </th>
-                                    </tr>
-                                    <Modal
-                                    isOpen={modalState.modal}
-                                    toggle={toggle}
-                                    >
-                                    <ModalHeader toggle={toggle}>
-                                    Voucher Details
-                                    </ModalHeader>
-                                    <ModalBody>
-                                    <Form>
-                                        {console.log(voucher,' voucher here')}
-                                      <FormGroup>
-                                        <Label for="qty">Billing Weight (Quantity in QTL)</Label>
-                                        <Input
-                                          type="number"
-                                          name="billingWeight"
-                                          placeholder="Enter Billing Weight"
-                                          value={voucher.billingWeight || 0}
-                                          onChange={(e) => handleQuantityChange(e)}
-                                        />
-                                      </FormGroup>
-                                      <FormGroup>
-                                        <Label for="qty">Kanta Weight</Label>
-                                        <Input
-                                          type="number"
-                                          name="kantaWeight"
-                                          placeholder="Enter Kanta Weight"
-                                          value={voucher.kantaWeight || 0}
-                                          onChange={(e) => handleQuantityChange(e)}
-                    
-                                        />
-                                      </FormGroup>
-                                    
-                                      <FormGroup>
-                                        <Label for="qty">Accepted Weight</Label>
-                                        <br></br>
-                                        {voucher.acceptedWeight}
-                                      </FormGroup>
-                                      <>
-                                       
-                                      
-                                      <FormGroup>
-                                        <Label for="bardanaClaim">Bardana Claim</Label>
-                                        <Input
-                                          type="text"
-                                          name="bardanaClaim"
-                                          placeholder="Enter Bardana Claim"
-                                          value={voucher.bardanaClaim}
-                                          onChange={(e) => handleQuantityChange(e)}
-                    
-                                        />
-                                        
-                                      
-                                      </FormGroup>
-                                     
-                                      <FormGroup>
-                                        <Label for="qualityClaimPercent">Quality Claim %</Label>
-                                        <Input
-                                          type="number"
-                                          name="qualityClaimPercent"
-                                          placeholder="Enter Quality Claim %"
-                                          value={voucher.qualityClaimPercent}
-                                          onChange={(e) => handleQuantityChange(e)}
-                    
-                                        />
-                                      </FormGroup>
-                                      <FormGroup>
-                                        <Label for="qualityClaim">Rate Claim</Label>
-                                        <Input
-                                          type="text"
-                                          name="qualityClaim"
-                                          placeholder="Enter Quantity"
-                                          value={voucher.rateClaim}
-                                          onChange={(e) => handleQuantityChange(e)}
-                    
-                                        />
-                                      </FormGroup>
-                                      <FormGroup>
-                                        <Label for="qualityClaim">Moisture</Label>
-                                        <Input
-                                          type="text"
-                                          name="qualityClaim"
-                                          placeholder="Enter Quantity"
-                                          value={voucher.moisture}
-                                          onChange={(e) => handleQuantityChange(e)}
-                    
-                                        />
-                                      </FormGroup>
+                        {vouchers &&
+                            <>
+                                <tbody>
+                                    {vouchers.map((pur, idx) => (
+                                        <>
+                                            <tr key={idx}>
+                                                <td>
+                                                    <Button onClick={() => setModalData(pur, pur.id)}>
+                                                        <EditIcon />
+                                                    </Button>
+                                                </td>
+                                                <th>
+                                                    <input name='name' onChange={(e) => handlePurchaseChange(e, pur, idx)} value={pur.name}></input>
+                                                </th>
+                                                <th>
+                                                    <input name='quantity' onChange={(e) => handlePurchaseChange(e, pur, idx)} value={pur.quantity}></input>
+                                                </th>
+                                                <th>
+                                                    <input name='unit' onChange={(e) => handlePurchaseChange(e, pur, idx)} value={pur.unit}></input>
+                                                </th>
+                                                <th>
+                                                    <input name='price' onChange={(e) => handlePurchaseChange(e, pur, idx)} value={pur.price}></input>
+                                                </th>
+                                                <th>
+                                                    <input value={pur.price * pur.quantity}></input>
+                                                </th>
+                                            </tr>
+                                            <Modal
+                                                isOpen={modalState.modal}
+                                                toggle={toggle}
+                                            >
+                                                <ModalHeader toggle={toggle}>
+                                                    Voucher Details
+                                                </ModalHeader>
+                                                <ModalBody>
+                                                    <Form>
+                                                        {console.log(voucher, ' voucher here')}
+                                                        <FormGroup>
+                                                            <Label for="qty">Billing Weight (Quantity in QTL)</Label>
+                                                            <Input
+                                                                type="number"
+                                                                name="billingWeight"
+                                                                placeholder="Enter Billing Weight"
+                                                                value={voucher.billingWeight || 0}
+                                                                onChange={(e) => handleQuantityChange(e)}
+                                                            />
+                                                        </FormGroup>
+                                                        <FormGroup>
+                                                            <Label for="qty">Kanta Weight</Label>
+                                                            <Input
+                                                                type="number"
+                                                                name="kantaWeight"
+                                                                placeholder="Enter Kanta Weight"
+                                                                value={voucher.kantaWeight || 0}
+                                                                onChange={(e) => handleQuantityChange(e)}
 
-                                      </>
-                                      
-                                      {/* <FormGroup check row>
+                                                            />
+                                                        </FormGroup>
+
+                                                        <FormGroup>
+                                                            <Label for="qty">Accepted Weight</Label>
+                                                            <br></br>
+                                                            {voucher.acceptedWeight}
+                                                        </FormGroup>
+                                                        <>
+
+
+                                                            <FormGroup>
+                                                                <Label for="bardanaClaim">Bardana Claim</Label>
+                                                                <Input
+                                                                    type="text"
+                                                                    name="bardanaClaim"
+                                                                    placeholder="Enter Bardana Claim"
+                                                                    value={voucher.bardanaClaim}
+                                                                    onChange={(e) => handleQuantityChange(e)}
+
+                                                                />
+
+
+                                                            </FormGroup>
+
+                                                            <FormGroup>
+                                                                <Label for="qualityClaimPercent">Quality Claim %</Label>
+                                                                <Input
+                                                                    type="number"
+                                                                    name="qualityClaimPercent"
+                                                                    placeholder="Enter Quality Claim %"
+                                                                    value={voucher.qualityClaimPercent}
+                                                                    onChange={(e) => handleQuantityChange(e)}
+
+                                                                />
+                                                            </FormGroup>
+                                                            <FormGroup>
+                                                                <Label for="qualityClaim">Rate Claim</Label>
+                                                                <Input
+                                                                    type="text"
+                                                                    name="qualityClaim"
+                                                                    placeholder="Enter Quantity"
+                                                                    value={voucher.rateClaim}
+                                                                    onChange={(e) => handleQuantityChange(e)}
+
+                                                                />
+                                                            </FormGroup>
+                                                            <FormGroup>
+                                                                <Label for="qualityClaim">Moisture</Label>
+                                                                <Input
+                                                                    type="text"
+                                                                    name="qualityClaim"
+                                                                    placeholder="Enter Quantity"
+                                                                    value={voucher.moisture}
+                                                                    onChange={(e) => handleQuantityChange(e)}
+
+                                                                />
+                                                            </FormGroup>
+
+                                                        </>
+
+                                                        {/* <FormGroup check row>
                                         <Col sm={{ size: 10, offset: 2 }}>
                                           <Button onClick={updateVoucher}>Submit</Button>
                                         </Col>
                                       </FormGroup> */}
-                                    </Form>
-                                  
-                                        <br />
-                                    </ModalBody>
-                                    <ModalFooter>
-                                        <Button
-                                            color="primary"
-                                            onClick={() => saveUpdateVoucher(pur.id)}>
-                                            {/* submit data in state */}
-                                            Save
-                                        </Button>{' '}
-                                        <Button
-                                            color="secondary"
-                                            onClick={() => toggle()}>
-                                            Cancel
-                                        </Button>
-                                    </ModalFooter>
-                                </Modal>
-                                </>
-                                ))}
-                            </tbody>
-                             </>
+                                                    </Form>
+
+                                                    <br />
+                                                </ModalBody>
+                                                <ModalFooter>
+                                                    <Button
+                                                        color="primary"
+                                                        onClick={() => saveUpdateVoucher(pur.id)}>
+                                                        {/* submit data in state */}
+                                                        Save
+                                                    </Button>{' '}
+                                                    <Button
+                                                        color="secondary"
+                                                        onClick={() => toggle()}>
+                                                        Cancel
+                                                    </Button>
+                                                </ModalFooter>
+                                            </Modal>
+                                        </>
+                                    ))}
+                                </tbody>
+                            </>
                         }
 
                     </table>
+                    <br />
                     <Row>
-                        <Col>
-                        Total Amount : {getTotalAmount()}
+                        <Col md={7}>
+                        </Col>
+                        <Col md={5}>
+                            <b>Total Amount : {getTotalAmount()}</b>
                         </Col>
                     </Row>
 
@@ -524,8 +535,268 @@ export default function PurchaseOrderPage() {
 
                 </CardBody>
             </Card>
+            {/* {"My deds",deductions} */}
+            <br/>
+            <Card>
+                <CardBody>
+                    <Row>
+                        <br />
+                        <Card>
+                            <CardBody>
+
+                                <table style={{ marginLeft: "135px", border: "1px solid black" }}>
+                                    <thead>
+                                        <tr>
+                                            <th>S No.</th>
+                                            <th>Bill Sundry</th>
+                                            <th>@</th>
+                                            <th>Amount(Rs.)</th>
+                                        </tr>
+
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                &nbsp;&nbsp;&nbsp;1.
+                                            </td>
+                                            <td>Freight (add)</td>
+                                            <td>
+                                                <input type="number" onChange={(e) => setFrieghtAdd(e.target.value)} value={freightAdd} />
+
+                                            </td>
+                                            <td>
+                                                <input type="number" value={Number(deductions.freight) + Number(freightAdd) - Number(freightSub)} />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                &nbsp;&nbsp;&nbsp;2.
+
+                                            </td>
+                                            <td>Freight (less)</td>
+                                            <td>
+                                                <input type="number" onChange={(e) => setFrieghtSub(e.target.value)} value={freightSub} />
+
+                                            </td>
+                                            <td>
+
+                                                <input type="number" value={Number(deductions.freight) + Number(freightAdd) - Number(freightSub)} />
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                &nbsp;&nbsp;&nbsp;3.
+                                            </td>
+                                            <td>Dala (Labour Charge)</td>
+                                            <td></td>
+                                            <td>
+                                                <input name="dala" type="number" onChange={handleDeductionChange} value={deductions.dala} />
+
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                &nbsp;&nbsp;&nbsp;4.
+                                            </td>
+                                            <td>Kanta Charge</td>
+                                            <td></td>
+                                            <td>
+                                                <input name="kanta" type="number" onChange={(e) => handleDeductionChange(e)} value={deductions.kanta} />
+
+
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                &nbsp;&nbsp;&nbsp;5.
+                                            </td>
+                                            <td>CD (Cash Discount)</td>
+                                            <td></td>
+                                            <td>
+                                                <input name="cd" type="number" onChange={handleDeductionChange} value={deductions.cd} />
+
+
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                &nbsp;&nbsp;&nbsp;6.
+                                            </td>
+                                            <td>TDS / TCS</td>
+                                            <td></td>
+                                            <td>
+                                                <input name="tds" type="number" onChange={handleDeductionChange} value={deductions.tds} />
+
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                &nbsp;&nbsp;&nbsp;7.
+
+                                            </td>
+                                            <td>Bardana Chowker Qty / Amount</td>
+                                            <td></td>
+                                            <td>
+                                                <input name="bardana" type="number" onChange={handleDeductionChange} value={deductions.bardana} />
+
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                &nbsp;&nbsp;&nbsp;8.
+                                            </td>
+                                            <td>Brokerage</td>
+                                            <td></td>
+                                            <td>
+                                                <input name="brokerage" type="number" onChange={handleDeductionChange} value={deductions.brokerage} />
+
+                                            </td>
+                                        </tr>
+
+
+
+                                        <tr>
+                                            <td>
+                                                &nbsp;&nbsp;&nbsp;9.
+
+                                            </td>
+                                            <td>Commission (add)</td>
+                                            <td>
+                                                <input type="number" onChange={(e) => setCommAdd(e.target.value)} value={commAdd} />
+
+                                            </td>
+                                            <td>
+                                                <input type="number" value={Number(deductions.commission) + Number(commAdd) - Number(commSub)} />
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                &nbsp;&nbsp;&nbsp;10.
+                                            </td>
+                                            <td>Commission (less)</td>
+                                            <td>
+                                                <input type="number" onChange={(e) => setCommSub(e.target.value)} value={commSub} />
+
+                                            </td>
+                                            <td>
+                                                <input type="number" value={Number(deductions.commission) + Number(commAdd) - Number(commSub)} />
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                                <Row style={{ marginTop: "20px" }}>
+                                    <Col md="8">
+                                    </Col>
+                                    <Col md="3">
+                                        {/* <button style={{marginRight: "20px"}} onClick={()=>addNewPurchase()} className='btn btn-primary'>Add New</button> */}
+                                        <button onClick={() => saveDeductions(deductions.id)} className='btn btn-primary'>Save</button>
+                                    </Col>
+                                    <Col md="1">
+                                    </Col>
+                                </Row>
+                            </CardBody>
+                        </Card>
+                    </Row>
+                    <br />
+                    <Row>
+                        <Col md={6}>
+                        </Col>
+                        <Col md={6}>
+                            <b>Total Amount : {getTotalFreightDeductions()}</b>
+                        </Col>
+                    </Row>
+                </CardBody>
+            </Card>
+            <br />
+            <Card>
+                <CardHeader>Optional Fields</CardHeader>
+
+                <CardBody>
+                    <Row>
+                        <Col md={3}>
+
+                        </Col>
+                        <Col md={6}>
+                            <Form>
+                                <FormGroup>
+                                    <Label for="vehicleNo">Vehicle No.</Label>
+                                    <Input
+                                        type="text"
+                                        name="vehicleNo"
+                                        placeholder="Enter Vehicle No."
+                                        value={optionalFields.vehicleNo}
+                                        onChange={(e) => handleChange(e)}
+
+                                    />
+                                </FormGroup>
+                                <FormGroup>
+                                    <Label for="brokerage">Drivers Name</Label>
+                                    <Input
+                                        type="text"
+                                        name="driverName"
+                                        placeholder="Enter Driver Name"
+                                        value={optionalFields.driverName}
+                                        onChange={handleChange}
+
+                                    />
+                                </FormGroup>
+                                <FormGroup>
+                                    <Label for="loadingIncharge">Loading Incharge</Label>
+                                    <Input
+                                        type="text"
+                                        name="loadingIncharge"
+                                        placeholder="Enter Loading Incharge"
+                                        value={optionalFields.loadingIncharge}
+                                        onChange={handleChange}
+                                    />
+                                </FormGroup>
+                                <FormGroup>
+                                    <Label for="kantaSilipWeight">Kanta Silip Weight</Label>
+                                    <Input
+                                        type="text"
+                                        name="kantaSilipWeight"
+                                        placeholder="Enter Kanta Silip Weight"
+                                        value={optionalFields.kantaSilipWeight}
+                                        onChange={handleChange}
+                                    />
+                                </FormGroup>
+                                <FormGroup>
+                                    <Label for="dalalName">Dalal Name</Label>
+                                    <Input
+                                        type="text"
+                                        name="dalalName"
+                                        placeholder="Enter Dalal Name"
+                                        value={optionalFields.dalalName}
+                                        onChange={handleChange}
+                                    />
+                                </FormGroup>
+
+                                <FormGroup check row>
+                                    <Col sm={{ size: 10, offset: 2 }}>
+                                        <Button onClick={addOptionalFields}>Submit</Button>
+                                    </Col>
+                                </FormGroup>
+                            </Form>
+                        </Col>
+                        <Col md={3}>
+
+                        </Col>
+                    </Row>
+
+
+                </CardBody>
+            </Card>
+
             {/* modal start here  */}
-            
+
             <br />
             <ToastContainer />
         </div>
