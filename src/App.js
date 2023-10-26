@@ -11,6 +11,7 @@ import {  useDispatch } from 'react-redux';
 import PrivateRoute from './components/PrivateRoute';
 import routes from './utils/routes';
 import { saveUserDetails } from './store/authSlice';
+import { SalesDetails } from './pages/sales/SalesDetails';
 
 const PlaceOrderForm = React.lazy(() => import('pages/orders/PlaceOrderForm'));
 const AlertPage = React.lazy(() => import('pages/AlertPage'));

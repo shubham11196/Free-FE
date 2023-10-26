@@ -32,7 +32,8 @@ export default function OrderSuperAdminPage() {
   ];
 
   if (role === "Super Admin") {
-    columns.push("Purchase Actions")
+    columns.push("Purchase Actions");
+    // columns.push("Sales Actions");
   }
   console.log(role, "role");
   useEffect(() => {

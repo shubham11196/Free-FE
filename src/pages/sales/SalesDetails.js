@@ -21,8 +21,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import EditIcon from '@mui/icons-material/Edit';
 
 
-export default function PurchaseOrderPage() {
-    const [order, setOrder] = useState([]);
+export default function SalesDetails() {
+    // const [order, setOrder] = useState([]);
+    const [sales, setSales] = useState([]);
     const [purchase, setPurchase] = useState([]);
     const [modalState, setModalState] = useState({
         modal: false,
@@ -169,82 +170,33 @@ export default function PurchaseOrderPage() {
             }
         })
     }
-
-    const id = localStorage.getItem("purchaseId");
-    useEffect(() => {
-        axios.get(`${'https://admin-backend-fjzy.onrender.com'}/api/orders/${id}`)
-            // .then(res => res.json())
-            .then(res => {
-                console.log("My resss", res.data.data);
-                setPurchase(res.data.data[0].voucher);
-
-                setDeductions(res.data.data[0].deductions[0]);
-                setOrder(res.data.data)
-            });
-        viewItem();
-        viewAdditionalFields();
-        getVouchers();
-    }, []);
-
-    const getVouchers = async () => {
-        const res = await axios.get(`${'http://localhost:5000'}/api/voucher/viewVoucherDetails/${id}`);
-        console.log("my voucher response", res)
-        setVouchers(res.data.data);
-
-    }
-    const updateVoucher = async (voucherId) => {
-        const res = await axios.get(`${'http://localhost:5000'}/api/voucher/addVoucherAdditionalData/${voucherId}`);
-        console.log("my response", res)
-        setVouchers(res.data.data);
-
+    const viewAdditionalFields = async () => {
+        const res = await axios.get(`${'http://localhost:5000'}/api/sales/viewOptionalFields/${id}`,
+            addFields
+        );
+        console.log("fields", res.data.data[0])
+        setOptionalFields(res.data.data[0])
     }
     const addOptionalFields = async () => {
-        await axios.post(`${'https://admin-backend-fjzy.onrender.com'}/api/orders/addFields/${id}`,
+        await axios.post(`${'http://localhost:5000'}/api/sales/addFields/${id}`,
             optionalFields
         );
         toast("Optional Field added Successfully");
-
     }
-    const addItem = async () => {
-        await axios.post(`${'https://admin-backend-fjzy.onrender.com'}/api/orders/addItem/${id}`,
-            addFields
-        );
-        toast("Item added Successfully");
-
+    const getTotalFreightDeductions = () => {
+        let amount = Number(deductions.freight) + deductions.dala + Number(deductions.kanta)
+            + deductions.cd + deductions.tds + Number(deductions.bardana) + deductions.brokerage
+            + deductions.commission
+        return amount;
     }
-    const viewAdditionalFields = async () => {
-        const res = await axios.get(`${'https://admin-backend-fjzy.onrender.com'}/api/orders/viewOptionalFields/${id}`,
-            addFields
-        );
-        setOptionalFields(res.data.data[0])
-    }
-    const viewItem = async () => {
-        const res = await axios.get(`${'https://admin-backend-fjzy.onrender.com'}/api/orders/viewItems/${id}`,
-            addFields
-        );
-        setAddFields(res.data.data[0])
-    }
-    const handlePurchaseChange = (e, product, i) => {
-        e.preventDefault();
-        let oldPurchases = [...purchase];
-        product[e.target.name] = e.target.value;
-        oldPurchases[i] = product;
-        setPurchase(oldPurchases);
-    }
-
-    console.log(vouchers, 'purchase state');
-
-    const addNewPurchase = (id) => {
-        savePurchase(id);
-        // let newPurchase = {
-
-        //     name: '',
-        //     quantity: 0,
-        //     price: 0,
-        //     unit: 0
-        // };
-
-        // setVouchers(oldState => [...oldState, newPurchase]);
+    const saveDeductions = async () => {
+        let body = {
+            ...deductions,
+            freight: Number(deductions.freight) + Number(freightAdd) - Number(freightSub),
+            commission: Number(deductions.commission) + Number(commAdd) - Number(commSub)
+        }
+        await axios.post(`${'http://localhost:5000'}/api/sales/salesVoucherDeductions/${id}`, body).then(res => console.log(res));
+        toast("Deductions added Successfully");
     }
 
     const getTotalAmount = () => {
@@ -257,62 +209,13 @@ export default function PurchaseOrderPage() {
         return amount;
     }
 
-    const getTotalFreightDeductions = () => {
-        let amount = Number(deductions.freight) + deductions.dala + Number(deductions.kanta)
-            + deductions.cd + deductions.tds + Number(deductions.bardana) + deductions.brokerage
-            + deductions.commission
-        return amount;
+    const handleSalesChange = (e, product, i) => {
+        e.preventDefault();
+        let oldPurchases = [...purchase];
+        product[e.target.name] = e.target.value;
+        oldPurchases[i] = product;
+        setPurchase(oldPurchases);
     }
-
-    const getVoucherItemsDeductions = () => {
-        let amount = voucher.acceptedWeight - voucher.bardanaClaim 
-        // - Number(voucher.qualityClaim)
-        - voucher.qualityClaimPercent
-        - voucher.rateClaim
-        - voucher.moisture
-        ;
-        return amount;
-    }
-
-
-
-    const savePurchase = (id) => {
-        console.log("purrrrr", purchase);
-        axios.post(`${'http://localhost:5000'}/api/voucher/addVoucherDetails/${id}`, newVoucherData).then(res => console.log("my res", res));
-        toast("Voucher data added Successfully");
-
-    }
-
-    const saveUpdateVoucher = (id) => {
-        console.log("voucherss", voucher);
-        axios.put(`${'http://localhost:5000'}/api/voucher/addVoucherAdditionalData/${voucherId}`, voucher)
-            .then(res => console.log("my ressss", res))
-            .then(() => {
-                toast("Voucher data updated Successfully");
-                getVouchers();
-                toggle();
-                    console.log("deductions", voucher)
-
-            })
-            .then(() => {
-                setNetQty()
-            });
-
-
-
-    }
-    
-
-    const saveDeductions = async () => {
-        let body = {
-            ...deductions,
-            freight: Number(deductions.freight) + Number(freightAdd) - Number(freightSub),
-            commission: Number(deductions.commission) + Number(commAdd) - Number(commSub)
-        }
-        await axios.post(`${'https://admin-backend-fjzy.onrender.com'}/api/orders/addDeductions/${id}`, body).then(res => console.log(res));
-        toast("Deductions added Successfully");
-    }
-
     const setModalData = (pur, id) => {
         toggle();
         setQuantityData({
@@ -327,7 +230,64 @@ export default function PurchaseOrderPage() {
         setVoucher(pur);
     }
 
-    console.log("deductions", voucher)
+    const saveUpdateVoucher = (id) => {
+        console.log("voucherss", voucher);
+        axios.put(`${'http://localhost:5000'}/api/voucher/addVoucherAdditionalData/${voucherId}`, voucher)
+            .then(res => console.log("my ressss", res))
+            .then(() => {
+                toast("Voucher data updated Successfully");
+                getVouchers();
+                toggle();
+                    console.log("deductions", voucher)
+            })
+            .then(() => {
+                setNetQty()
+            });
+    }
+
+    const getVouchers = async () => {
+        const res = await axios.get(`${'http://localhost:5000'}/api/voucher/viewVoucherDetails/${id}`);
+        console.log("my voucher response", res)
+        setVouchers(res.data.data);
+
+    }
+    const savePurchase = (id) => {
+        console.log("purrrrr", purchase);
+        axios.post(`${'http://localhost:5000'}/api/voucher/addVoucherDetails/${id}`, newVoucherData).then(res => console.log("my res", res));
+        toast("Voucher data added Successfully");
+
+    }
+
+    const addNewPurchase = (id) => {
+        savePurchase(id);
+        // let newPurchase = {
+
+        //     name: '',
+        //     quantity: 0,
+        //     price: 0,
+        //     unit: 0
+        // };
+
+        // setVouchers(oldState => [...oldState, newPurchase]);
+    }
+    const id = localStorage.getItem("salesId");
+    useEffect(() => {
+        axios.get(`${'http://localhost:5000'}/api/sales/${id}`)
+            // .then(res => res.json())
+            .then(res => {
+                console.log("My deductions", res.data.data[0].deductions);
+                setPurchase(res.data.data[0].voucher);
+
+                setDeductions(res.data.data[0].deductions);
+                setSales(res.data.data)
+            });
+        // viewItem();
+        viewAdditionalFields();
+        // getVouchers();
+    }, []);
+
+    
+    console.log("sales", sales)
     return (
         <div>
             <Card>
@@ -335,7 +295,7 @@ export default function PurchaseOrderPage() {
                 <CardHeader>Purchase Voucher</CardHeader>
 
                 <CardBody style={{ marginLeft: "150px" }}>
-                    {order.map((pur, index) => {
+                    {sales.map((pur, index) => {
                         const today = new Date(pur.date);
                         const month = today.getMonth() + 1;
                         const year = today.getFullYear();
@@ -348,7 +308,7 @@ export default function PurchaseOrderPage() {
                                     <div class="col-sm-4">
                                         <Label style={{ fontWeight: "600" }}>Series : </Label>
                                         &nbsp; &nbsp;
-                                        {pur.name}
+                                        {pur.salesVoucher[0].name}
                                     </div>
                                     <div class="col-sm-4">
                                         <Label style={{ fontWeight: "600" }}>Date : </Label>
@@ -390,7 +350,6 @@ export default function PurchaseOrderPage() {
 
                 </CardBody>
             </Card>
-
             <br />
             <Card>
                 <CardBody>
@@ -405,7 +364,6 @@ export default function PurchaseOrderPage() {
                             <th>Amount(Rs.)</th>
 
                         </thead>
-                        {console.log(vouchers, 'purrrrrrrr')}
 
                         {vouchers &&
                             <>
@@ -419,16 +377,16 @@ export default function PurchaseOrderPage() {
                                                     </Button>
                                                 </td>
                                                 <th>
-                                                    <input name='name' onChange={(e) => handlePurchaseChange(e, pur, idx)} value={pur.name}></input>
+                                                    <input name='name' onChange={(e) => handleSalesChange(e, pur, idx)} value={pur.name}></input>
                                                 </th>
                                                 <th>
-                                                    <input name='quantity' onChange={(e) => handlePurchaseChange(e, pur, idx)} value={pur.quantity}></input>
+                                                    <input name='quantity' onChange={(e) => handleSalesChange(e, pur, idx)} value={pur.quantity}></input>
                                                 </th>
                                                 <th>
-                                                    <input name='unit' onChange={(e) => handlePurchaseChange(e, pur, idx)} value={pur.unit}></input>
+                                                    <input name='unit' onChange={(e) => handleSalesChange(e, pur, idx)} value={pur.unit}></input>
                                                 </th>
                                                 <th>
-                                                    <input name='price' onChange={(e) => handlePurchaseChange(e, pur, idx)} value={pur.price}></input>
+                                                    <input name='price' onChange={(e) => handleSalesChange(e, pur, idx)} value={pur.price}></input>
                                                 </th>
                                                 <th>
                                                     <input value={pur.price * pur.quantity}></input>
@@ -582,7 +540,7 @@ export default function PurchaseOrderPage() {
 
                 </CardBody>
             </Card>
-            {/* {"My deds",deductions} */}
+            <br />
             <br />
             <Card>
                 <CardHeader>Optional Fields</CardHeader>
@@ -662,6 +620,7 @@ export default function PurchaseOrderPage() {
 
                 </CardBody>
             </Card>
+            <br/>
             <br/>
             <Card>
                 <CardBody>
@@ -862,6 +821,7 @@ export default function PurchaseOrderPage() {
                     </Row>
                 </CardBody>
             </Card>
+          
             
 
             {/* modal start here  */}

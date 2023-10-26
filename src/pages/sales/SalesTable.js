@@ -10,7 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useHistory } from 'react-router-dom';
 
 
-const OrdersTable = ({ headers, usersData, ...restProps }) => {
+const SalesTable = ({ headers, usersData, ...restProps }) => {
   const history = useHistory();
 
   const handleApprove = async (id) => {
@@ -25,8 +25,8 @@ const OrdersTable = ({ headers, usersData, ...restProps }) => {
   }
 
   const handleAccept = async (id) => {
-    localStorage.setItem("purchaseId", id)
-    history.push(`/purchase/${id}`)
+    localStorage.setItem("salesId", id)
+    history.push(`/salesDetails/${id}`)
   }
 
   const salesHandleAccept = async (id) => {
@@ -132,4 +132,4 @@ const OrdersTable = ({ headers, usersData, ...restProps }) => {
 
 
 
-export default OrdersTable;
+export default SalesTable;

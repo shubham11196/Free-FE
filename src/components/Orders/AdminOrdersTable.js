@@ -33,7 +33,7 @@ const AdminOrdersTable = ({ headers, usersData, ...restProps }) => {
         {usersData.map((usersData, index) => (
           <tr key={index}>
             <td>{index + 1}</td>
-            <td className="align-middle text-center">dwdw{usersData.date}</td>
+            <td className="align-middle text-center">{usersData.date}</td>
             <td className="align-middle text-center">{usersData.productName}</td>
             <td className="align-middle text-center">{usersData.quantity}</td>
             <td className="align-middle text-center">{usersData.rate}</td>

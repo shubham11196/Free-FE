@@ -42,7 +42,7 @@ export default function OrdersPage() {
                   headers={[
                     'S No.',
                     'Date',
-                    'Product Name',
+                    'Product Nameeeee',
                     'Quantity',
                     'Rate',
                     'Packing Bardana',
