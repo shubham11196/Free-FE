@@ -178,7 +178,7 @@ export default function PurchaseOrderPage() {
                 console.log("My resss", res.data.data);
                 setPurchase(res.data.data[0].voucher);
 
-                setDeductions(res.data.data[0].deductions[0]);
+                setDeductions(res.data.data[0].deductions);
                 setOrder(res.data.data)
             });
         viewItem();

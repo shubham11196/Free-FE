@@ -184,9 +184,9 @@ export default function SalesDetails() {
         toast("Optional Field added Successfully");
     }
     const getTotalFreightDeductions = () => {
-        let amount = Number(deductions.freight) + deductions.dala + Number(deductions.kanta)
-            + deductions.cd + deductions.tds + Number(deductions.bardana) + deductions.brokerage
-            + deductions.commission
+        let amount = Number(deductions.freight) + Number(deductions.dala) + Number(deductions.kanta)
+            + Number(deductions.cd) + Number(deductions.tds) + Number(deductions.bardana) + Number(deductions.brokerage)
+            + Number(deductions.commission)
         return amount;
     }
     const saveDeductions = async () => {
@@ -201,7 +201,6 @@ export default function SalesDetails() {
 
     const getTotalAmount = () => {
         let amount = 0;
-
         vouchers.map((v) => {
             amount += v.quantity * v.price;
             return v;
@@ -246,14 +245,14 @@ export default function SalesDetails() {
     }
 
     const getVouchers = async () => {
-        const res = await axios.get(`${'http://localhost:5000'}/api/voucher/viewVoucherDetails/${id}`);
+        const res = await axios.get(`${'http://localhost:5000'}/api/voucher/viewVoucherDetails/${1}`);
         console.log("my voucher response", res)
         setVouchers(res.data.data);
 
     }
     const savePurchase = (id) => {
         console.log("purrrrr", purchase);
-        axios.post(`${'http://localhost:5000'}/api/voucher/addVoucherDetails/${id}`, newVoucherData).then(res => console.log("my res", res));
+        axios.post(`${'http://localhost:5000'}/api/voucher/addVoucherDetails/${1}`, newVoucherData).then(res => console.log("my res", res));
         toast("Voucher data added Successfully");
 
     }
@@ -283,7 +282,7 @@ export default function SalesDetails() {
             });
         // viewItem();
         viewAdditionalFields();
-        // getVouchers();
+        getVouchers();
     }, []);
 
     
