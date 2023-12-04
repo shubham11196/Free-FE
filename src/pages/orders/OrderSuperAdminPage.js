@@ -56,12 +56,7 @@ export default function OrderSuperAdminPage() {
       <Card>
 
         <CardHeader>Orders</CardHeader>
-        {
-          role === "Broker" &&
           <Button onClick={handleClick} color="primary" style={{ width: "150px", marginLeft: "40px", marginTop: "30px" }}>Place Order</Button>
-
-        }
-
         <CardBody>
           <OrdersTable
             headers={columns}

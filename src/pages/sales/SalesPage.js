@@ -56,7 +56,7 @@ export default function SalesPage() {
 
                 <CardHeader>Sales</CardHeader>
                 {
-                    role === "Broker" &&
+                    true &&
                     <Button onClick={handleClick} color="primary" style={{ width: "150px", marginLeft: "40px", marginTop: "30px" }}>Place Order</Button>
 
                 }
